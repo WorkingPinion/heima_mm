@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- 页面meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>黑马面面管理系统</title>
+    <meta name="description" content="AdminLTE2定制版">
+    <meta name="keywords" content="AdminLTE2定制版">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../plugins/adminLTE/css/AdminLTE.css">
+    <link rel="stylesheet" href="../plugins/adminLTE/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+    <script src="../js/vue.js"></script>
+    <script src="../js/axios-0.18.0.js"></script>
+    <script src="../element-ui/lib/index.js"></script>
+</head>
+<body>
+<div id="frameContent" class="content-wrapper" style="margin-left:0px;">
+
+    <!-- 内容头部 /-->
+    <section class="content-header">
+        <h1>
+            企业管理
+            <small>企业列表</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="all-admin-index.html"><i class="fa fa-dashboard"></i> 首页</a></li>
+        </ol>
+    </section>
+
+
+    <!-- 正文区域 :分页数据和分页条-->
+    <section class="content">
+        <!-- .box-body -->
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">列表</h3>
+            </div>
+
+            <div class="box-body">
+
+                <!-- 数据表格 -->
+                <div class="table-box">
+
+                    <!--工具栏-->
+                    <div class="pull-left">
+                        <div class="form-group form-inline">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default" title="新建" @click='handleCreate()'>新建
+                                </button>
+                                <button type="button" class="btn btn-default" title="删除" @click='handleDelete()'> 删除
+                                </button>
+                                <button type="button" class="btn btn-default" title="刷新"
+                                        onclick="window.location.reload();"> 刷新
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-tools pull-right">
+                        <div class="has-feedback">
+                            <input type="text" class="form-control input-sm" placeholder="搜索">
+                            <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                        </div>
+                    </div>
+                    <!--工具栏/-->
+
+                    <!--数据列表-->
+                    <table id="dataList" class="table table-bordered table-striped table-hover dataTable">
+                        <thead>
+                        <tr>
+                            <th class="" style="padding-right:0px;"></th>
+                            <th class="sorting">企业名称</th>
+                            <th class="sorting">所在地</th>
+                            <th class="sorting">地址</th>
+                            <th class="sorting">企业法人</th>
+                            <th class="sorting">联系方式</th>
+                            <th class="sorting">所属行业</th>
+                            <th class="sorting">状态</th>
+                            <th class="text-center">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="company in dataList">
+                            <td><input v-model="checkedItemIds" :value="company.id" type="checkbox"></td>
+                            <td>{{company.name}}</td>
+                            <td>{{company.city}}</td>
+                            <td>{{company.address}}</td>
+                            <td>{{company.representative}}</td>
+                            <td>{{company.phone}}</td>
+                            <td>{{company.industry}}</td>
+                            <td>{{company.state ==0?'未审核':'已审核'}}</td>
+                            <td class="text-center">
+                                <button type="button" class="btn bg-olive btn-xs" @click='handleUpdate(company.id)'>编辑
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <!--
+                分页组件
+                  @size-change： 当改变每页条数时触发的函数
+                  @current-change：当改变页码时触发的函数
+                  current-page ：默认的页码
+                  :page-sizes：每页条数选择框中显示的值
+                  :page-size : 默认的每页条数
+                  layout： 分页组件的布局
+                      total（总条数）, sizes(每页条数), prev（上一页）, pager(所有的页码), next(下一页), jumper（跳转页码）
+                  :total: 总条数
+            -->
+            <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="pagination.currentPage"
+                    :page-sizes="[3,5,8]"
+                    :page-size="pagination.pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="pagination.total">
+            </el-pagination>
+
+        </div>
+    </section>
+
+    <!--添加弹出框-->
+    <el-dialog title="添加企业信息" :visible.sync="dialogFormVisible4Add" @close="resetForm()">
+        <!--
+            :model="formData": 关联数据
+            :rules: 关联校验规则
+            ref： 在获取表单对象时使用
+        -->
+        <el-form :model="formData" ref="addForm" label-width="100px" class="demo-ruleForm">
+            <div class="row data-type" style="margin: 0px">
+                <div class="col-md-2 title">企业名称</div>
+                <div class="col-md-4 data">
+                    <input type="text" class="form-control" placeholder="企业名称" v-model="formData.name">
+                </div>
+
+                <div class="col-md-2 title">营业执照</div>
+                <div class="col-md-4 data">
+                    <input type="text" class="form-control" placeholder="营业执照" v-model="formData.licenseId">
+                </div>
+
+                <div class="col-md-2 title">所在城市</div>
+                <div class="col-md-4 data">
+                    <input type="text" class="form-control" placeholder="所在地" v-model="formData.city">
+                </div>
+
+                <div class="col-md-2 title">企业地址</div>
+                <div class="col-md-4 data">
+                    <input type="text" class="form-control" placeholder="企业地址" v-model="formData.address">
+                </div>
+
+                <div class="col-md-2 title">法人代表</div>
+                <div class="col-md-4 data">
+                    <input type="text" class="form-control" placeholder="法人代表" v-model="formData.representative">
+                </div>
+
+                <div class="col-md-2 title">联系电话</div>
+                <div class="col-md-4 data">
+                    <input type="text" class="form-control" placeholder="联系电话" v-model="formData.phone">
+                </div>
+
+                <div class="col-md-2 title">公司规模</div>
+                <div class="col-md-4 data">
+                    <input type="text" class="form-control" placeholder="公司规模" v-model="formData.companySize">
+                </div>
+
+                <div class="col-md-2 title">所属行业</div>
+                <div class="col-md-4 data">
+                    <input type="text" class="form-control" placeholder="所属行业" v-model="formData.industry">
+                </div>
+                <div class="col-md-2 title">状态</div>
+                <div class="col-md-4 data">
+                    <select class="form-control select2" v-model="formData.state" style="width: 100%;">
+                        <option value="0">未审核</option>
+                        <option value="1">已审核</option>
+                    </select>
+                </div>
+
+
+                <div class="col-md-2 title">到期时间</div>
+                <div class="col-md-4 data">
+                    <div class="input-group date">
+                        <div class="input-group-addon">
+                            <i class="fa fa-calendar"></i>
+                        </div>
+                        <input type="date" placeholder="到期时间" v-model="formData.expirationDate"
+                               class="form-control pull-right">
+                    </div>
+                </div>
+
+                <div class="col-md-2 title rowHeight2x">备注</div>
+                <div class="col-md-10 data rowHeight2x">
+                    <textarea class="form-control" rows="3" name="remarks" v-model="formData.remarks"></textarea>
+                </div>
+            </div>
+            <div class="box-tools text-center">
+                <button type="button" @click="handleAdd()" class="btn bg-maroon">保存</button>
+                <button type="button" class="btn bg-default" @click="resetForm();dialogFormVisible4Add=false">返回
+                </button>
+            </div>
+        </el-form>
+    </el-dialog>
+
+    <!--编辑弹出框-->
+    <el-dialog title="编辑企业信息" :visible.sync="dialogFormVisible4Edit" @close="resetForm()">
+        <!--
+            :model="formData": 关联数据
+            :rules: 关联校验规则
+            ref： 在获取表单对象时使用
+        -->
+        <el-form :model="formData" ref="editForm" label-width="100px" class="demo-ruleForm">
+            <div class="row data-type" style="margin: 0px">
+                <div class="col-md-2 title">企业名称</div>
+                <div class="col-md-4 data">
+                    <input type="text" class="form-control" placeholder="企业名称" v-model="formData.name">
+                </div>
+
+                <div class="col-md-2 title">营业执照</div>
+                <div class="col-md-4 data">
+                    <input type="text" class="form-control" placeholder="营业执照" v-model="formData.licenseId">
+                </div>
+
+                <div class="col-md-2 title">所在城市</div>
+                <div class="col-md-4 data">
+                    <input type="text" class="form-control" placeholder="所在地" v-model="formData.city">
+                </div>
+
+                <div class="col-md-2 title">企业地址</div>
+                <div class="col-md-4 data">
+                    <input type="text" class="form-control" placeholder="企业地址" v-model="formData.address">
+                </div>
+
+                <div class="col-md-2 title">法人代表</div>
+                <div class="col-md-4 data">
+                    <input type="text" class="form-control" placeholder="法人代表" v-model="formData.representative">
+                </div>
+
+                <div class="col-md-2 title">联系电话</div>
+                <div class="col-md-4 data">
+                    <input type="text" class="form-control" placeholder="联系电话" v-model="formData.phone">
+                </div>
+
+                <div class="col-md-2 title">公司规模</div>
+                <div class="col-md-4 data">
+                    <input type="text" class="form-control" placeholder="公司规模" v-model="formData.companySize">
+                </div>
+
+                <div class="col-md-2 title">所属行业</div>
+                <div class="col-md-4 data">
+                    <input type="text" class="form-control" placeholder="所属行业" v-model="formData.industry">
+                </div>
+                <div class="col-md-2 title">状态</div>
+                <div class="col-md-4 data">
+                    <select class="form-control select2" v-model="formData.state" style="width: 100%;">
+                        <option value="0">未审核</option>
+                        <option value="1">已审核</option>
+                    </select>
+                </div>
+
+
+                <div class="col-md-2 title">到期时间</div>
+                <div class="col-md-4 data">
+                    <div class="input-group date">
+                        <div class="input-group-addon">
+                            <i class="fa fa-calendar"></i>
+                        </div>
+                        <input type="date" placeholder="到期时间" v-model="formData.expirationDate"
+                               class="form-control pull-right">
+                    </div>
+                </div>
+
+                <div class="col-md-2 title rowHeight2x">备注</div>
+                <div class="col-md-10 data rowHeight2x">
+                    <textarea class="form-control" rows="3" name="remarks" v-model="formData.remarks"></textarea>
+                </div>
+            </div>
+            <div class="box-tools text-center">
+                <button type="button" @click="handleEdit()" class="btn bg-maroon">保存</button>
+                <button type="button" class="btn bg-default" @click="resetForm();dialogFormVisible4Edit=false">返回
+                </button>
+            </div>
+        </el-form>
+    </el-dialog>
+</div>
+<script>
+    new Vue({
+        el: "#frameContent",
+        data: {
+            checkedItemIds: [], //选中的复选框id们
+            dataList: [],//当前页要展示的分页列表数据
+            pagination: {
+                currentPage: 1, //当前页数
+                pageSize: 5, //每页条数
+                total: 100 //总条数
+            },
+            formData: {},//表单数据
+            dialogFormVisible4Add: false,//增加表单是否可见
+            dialogFormVisible4Edit: false//编辑表单是否可见
+        },
+        created() { //vue对象创建完成的回调函数
+            this.findByPage()
+        },
+        methods: {
+            //分页查询方法
+            findByPage() {
+                axios.get("../store/company/findByPage", {params: this.pagination}).then((resp) => {
+                    if (resp.data.flag) {
+                        //展示分页数据,resp.data得到Result，resp.data.data得到PageInfo
+                        this.dataList = resp.data.data.list;
+                        //展示分页条
+                        this.pagination.total = resp.data.data.total;
+                    } else {
+                        this.$message.error(resp.data.message);
+                    }
+                })
+            },
+            //重置表单方法
+            resetForm() {
+                this.formData = {};
+            },
+            //新建方法
+            handleCreate() {
+                this.dialogFormVisible4Add = true;
+            },
+            //保存方法
+            handleAdd() {
+                //发送异步请求
+                axios.post("../store/company/save", this.formData).then(resp => {
+                    if (resp.data.flag) {
+                        //重新分页查询
+                        this.findByPage();
+                        //隐藏弹出框
+                        this.dialogFormVisible4Add = false;
+                        this.$message.success(resp.data.message);
+                    } else {
+                        this.$message.error(resp.data.message);
+                    }
+                })
+            },
+            //修改方法
+            handleUpdate(id) {
+                //展示弹出框
+                this.dialogFormVisible4Edit = true;
+                //发送异步请求，根据id查询
+                axios.get("../store/company/findById?id=" + id).then(resp => {
+                    if (resp.data.flag) {
+                        //展示信息
+                        this.formData = resp.data.data;
+                        //处理日期回显问题
+                        this.formData.expirationDate = this.formData.expirationDate.split(" ")[0];
+                    } else {
+                        this.$message.error(resp.data.message);
+                    }
+                })
+            },
+            //编辑方法
+            handleEdit() {
+                //发送异步请求
+                axios.post("../store/company/edit", this.formData).then(resp => {
+                    if (resp.data.flag) {
+                        //重新分页查询
+                        this.findByPage();
+                        //隐藏弹出框
+                        this.dialogFormVisible4Edit = false;
+                    } else {
+                        this.$message.error(resp.data.message);
+                    }
+                })
+            },
+            //删除方法
+            handleDelete() {
+                if (this.checkedItemIds.length) {
+                    //弹出确认框
+                    this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        //发送异步请求
+                        axios.post("../store/company/delete", this.checkedItemIds).then(resp => {
+                            if (resp.data.flag) {
+                                this.$message.success(resp.data.message);
+                                //重新分页查询
+                                this.findByPage();
+                            } else {
+                                this.$message.error(resp.data.message);
+                            }
+                        });
+                    });
+                } else {
+                    this.$message.error("请至少选择一个条目");
+                }
+            },
+            //改变每页条数时执行的函数
+            handleSizeChange(pageSize) {
+                //修改分页查询的参数
+                this.pagination.pageSize = pageSize;
+                //重新执行查询
+                this.findByPage();
+            },
+            //改变页码时执行的函数
+            handleCurrentChange(pageNum) {
+                //修改分页查询的参数
+                this.pagination.currentPage = pageNum;
+                //重新执行查询
+                this.findByPage();
+            }
+        }
+    });
+</script>
+</body>
+</html>

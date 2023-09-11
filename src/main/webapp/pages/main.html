@@ -1,0 +1,504 @@
+<html>
+<head>
+    <!-- 页面meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>黑马面面后台管理系统</title>
+    <meta name="description" content="AdminLTE2定制版">
+    <meta name="keywords" content="AdminLTE2定制版">
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../plugins/adminLTE/css/AdminLTE.css">
+    <link rel="stylesheet" href="../plugins/adminLTE/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+
+</head>
+<!--hold-transition：这个类名通常用于暂时禁用页面的过渡效果。过渡效果是指在加载页面或进行页面切换时，元素之间的动画效果。通过添加 hold-transition 类名，可以防止这些过渡效果的出现。-->
+<!--skin-purple：这个类名应用了一个紫色皮肤样式到页面。这通常是用于自定义页面主题和外观的CSS样式表的一部分。你可以在相应的CSS文件中查找到 skin-purple 类的定义，了解其具体样式设置。-->
+<!--sidebar-mini：这个类名通常用于创建一个迷你版本的侧边栏导航。侧边栏是位于页面左侧或右侧的垂直菜单栏，用于导航和展示页面的不同部分或功能。sidebar-mini 类可能用于控制侧边栏的大小、位置和交互方式。-->
+<body class="hold-transition skin-purple sidebar-mini" >
+<div class="wrapper" id="app">
+
+    <!-- 页面头部 -->
+    <header class="main-header">
+        <a href="all-admin-index.html" class="logo">
+            <span class="logo-mini"><img src="../img/logo.png"></span>
+            <span class="logo-lg">
+                    <img src="../img/export.png">
+                    <i> 黑马面面后台管理系统 </i>
+            </span>
+        </a>
+        <!--"navbar-static-top" 类则表示导航栏是静态的，并且位于页面的顶部-->
+        <nav class="navbar navbar-static-top">
+            <!--class="sidebar-toggle"：该元素应用了一个名为 "sidebar-toggle" 的类。这个类通常与CSS样式表相关联，用于定义触发侧边栏切换的样式-->
+            <!--data-toggle="offcanvas"：用于实现开关侧边栏的逻辑。-->
+            <!--role="button"：用于指定链接元素的角色是一个按钮（button），以便屏幕阅读器和辅助工具可以正确地识别和处理该元素-->
+            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                <!--class="sr-only"：表示这段文本只对屏幕阅读器可见-->
+                <span class="sr-only">Toggle navigation</span>
+            </a>
+            <!--标题右侧消息区-->
+            <div class="navbar-custom-menu">
+                <!--navbar-nav，用于定义导航条主体菜单，支持下拉菜单项-->
+                <ul class="nav navbar-nav">
+                    <!--新邮件-->
+                    <li class="dropdown messages-menu">
+                        <!--class="dropdown-toggle"：这个类名用于指定这个链接是一个下拉菜单的触发器-->
+                        <!--data-toggle="dropdown"：这个自定义的data属性用于指示下拉菜单将被触发显示/隐藏的方式-->
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-envelope-o"></i>
+                            <span class="label label-success">4</span>
+                        </a>
+                        <!--邮件列表-->
+                        <ul class="dropdown-menu">
+                            <li class="header">你有4个邮件</li>
+                            <li>
+                                <ul class="menu">
+                                    <li>
+                                        <a href="#">
+                                            <div class="pull-left">
+                                                <img src="../img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                                            </div>
+                                            <h4>
+                                                系统消息
+                                                <small><i class="fa fa-clock-o"></i> 5 分钟前</small>
+                                            </h4>
+                                            <p>欢迎登录系统?</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <div class="pull-left">
+                                                <img src="../img/user3-128x128.jpg" class="img-circle" alt="User Image">
+                                            </div>
+                                            <h4>
+                                                团队消息
+                                                <small><i class="fa fa-clock-o"></i> 2 小时前</small>
+                                            </h4>
+                                            <p>你有新的任务了</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <div class="pull-left">
+                                                <img src="../img/user4-128x128.jpg" class="img-circle" alt="User Image">
+                                            </div>
+                                            <h4>Developers
+                                                <small><i class="fa fa-clock-o"></i> Today</small>
+                                            </h4>
+                                            <p>Why not buy a new awesome theme?</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <div class="pull-left">
+                                                <img src="../img/user3-128x128.jpg" class="img-circle" alt="User Image">
+                                            </div>
+                                            <h4>Sales Department
+                                                <small><i class="fa fa-clock-o"></i> Yesterday</small>
+                                            </h4>
+                                            <p>Why not buy a new awesome theme?</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <div class="pull-left">
+                                                <img src="../img/user4-128x128.jpg" class="img-circle" alt="User Image">
+                                            </div>
+                                            <h4>
+                                                Reviewers
+                                                <small><i class="fa fa-clock-o"></i> 2 days</small>
+                                            </h4>
+                                            <p>Why not buy a new awesome theme?</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="footer"><a href="#">See All Messages</a></li>
+                        </ul>
+                    </li>
+                    <!-- 新消息 -->
+                    <li class="dropdown notifications-menu">
+                        <!--class="dropdown-toggle"：这个类名用于指定这个链接是一个下拉菜单的触发器-->
+                        <!--data-toggle="dropdown"：这个自定义的data属性用于指示下拉菜单将被触发显示/隐藏的方式-->
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-bell-o"></i>
+                            <span class="label label-warning">10</span>
+                        </a>
+                        <!--消息列表-->
+                        <ul class="dropdown-menu">
+                            <li class="header">你有10个新消息</li>
+                            <li>
+                                <!-- inner menu: contains the actual data -->
+                                <ul class="menu">
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-users text-aqua"></i> 5 new members joined today
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-warning text-yellow"></i> Very long description here that may not
+                                            fit into the page and may cause design problems
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-users text-red"></i> 5 new members joined
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-shopping-cart text-green"></i> 25 sales made
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-user text-red"></i> You changed your username
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="footer"><a href="#">View all</a></li>
+                        </ul>
+                    </li>
+                    <!-- 新任务 -->
+                    <li class="dropdown tasks-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-flag-o"></i>
+                            <span class="label label-danger">9</span>
+                        </a>
+                        <!--任务列表-->
+                        <ul class="dropdown-menu">
+                            <li class="header">你有9个新任务</li>
+                            <li>
+                                <!-- inner menu: contains the actual data -->
+                                <ul class="menu">
+                                    <li>
+                                        <!-- Task item -->
+                                        <a href="#">
+                                            <h3>
+                                                Design some buttons
+                                                <!--class="pull-right"：这个类名用于将元素向右浮动，使其位于标题的右侧。-->
+                                                <small class="pull-right">20%</small>
+                                            </h3>
+                                            <!--<div class="progress xs">：这个<div>元素表示一个进度条。它可能与进度相关的特定样式和行为相关联。-->
+                                            <div class="progress xs">
+                                                <!--class="progress-bar progress-bar-aqua"：这个类名用于指定这个元素是一个进度条的进度部分。它可能与某个特定颜色和样式相关联，如progress-bar-aqua表示使用浅蓝色作为进度条的颜色。-->
+                                                <div class="progress-bar progress-bar-aqua" style="width: 20%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                    <span class="sr-only">20% Complete</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <!-- end task item -->
+                                    <li>
+                                        <!-- Task item -->
+                                        <a href="#">
+                                            <h3>
+                                                Create a nice theme
+                                                <small class="pull-right">40%</small>
+                                            </h3>
+                                            <div class="progress xs">
+                                                <div class="progress-bar progress-bar-green" style="width: 40%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                    <span class="sr-only">40% Complete</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <!-- end task item -->
+                                    <li>
+                                        <!-- Task item -->
+                                        <a href="#">
+                                            <h3>
+                                                Some task I need to do
+                                                <small class="pull-right">60%</small>
+                                            </h3>
+                                            <div class="progress xs">
+                                                <div class="progress-bar progress-bar-red" style="width: 60%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                    <span class="sr-only">60% Complete</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <!-- end task item -->
+                                    <li>
+                                        <!-- Task item -->
+                                        <a href="#">
+                                            <h3>
+                                                Make beautiful transitions
+                                                <small class="pull-right">80%</small>
+                                            </h3>
+                                            <div class="progress xs">
+                                                <div class="progress-bar progress-bar-yellow" style="width: 80%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                    <span class="sr-only">80% Complete</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <!-- end task item -->
+                                </ul>
+                            </li>
+                            <li class="footer">
+                                <a href="#">View all tasks</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- 用户信息 -->
+                    <li class="dropdown user user-menu">
+                        <!--用户名-->
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="../img/user2-160x160.jpg" class="user-image" alt="User Image">
+                            <span class="hidden-xs">张益达</span>
+                        </a>
+                        <!--弹框-->
+                        <ul class="dropdown-menu">
+                            <!-- User image -->
+                            <li class="user-header">
+                                <img src="../img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                                <p>张益达</p>
+                            </li>
+                            <!-- Menu Footer-->
+                            <li class="user-footer">
+                                <div class="pull-left">
+                                    <a href="#" class="btn btn-default btn-flat">修改密码</a>
+                                </div>
+                                <div class="pull-right">
+                                    <a href="/logout.do" class="btn btn-default btn-flat">注销</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 导航侧栏 -->
+    <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            <!-- 用户信息区域 -->
+            <div class="user-panel">
+                <div class="pull-left image">
+                    <img src="../img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                </div>
+                <div class="pull-left info">
+                    <p> 张益达</p>
+                    <a href="#">人事行政部</a>
+                </div>
+            </div>
+
+            <!-- 菜单区域 -->
+            <ul class="sidebar-menu">
+                <li class="header">菜单</li>
+                <!--一级标题-->
+                <li v-for="menu in menuList" class="treeview">
+                    <a href="#">
+                        <i class="fa fa-cube"></i> <span>{{menu.name}}</span>
+                        <span class="pull-right-container">
+                            <!-- Font Awesome 图标的用法示例-->
+                         <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <!--对应的二级标题-->
+                    <ul class="treeview-menu">
+                        <li v-for="module in menu.children">
+                           <!--通过使用 <iframe> 元素，可以在当前页面中显示来自不同源（域）的内容，创建一个类似于内嵌式框架的效果。
+                            可以通过设置 src 属性来指定要嵌入的网页地址。-->
+                            <a :href="module.curl" onclick="setSidebarActive(this)" target="iframe">
+                                <!-- Font Awesome 图标的用法示例-->
+                                <i class="fa fa-circle-o"></i>
+                                {{module.name}}
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+    </aside>
+
+    <!-- 主内容区域 -->
+    <div class="content-wrapper">
+        <!--style="overflow:visible;"：通过内联样式，将 <iframe> 元素的溢出内容设置为可见，即不会隐藏超出元素大小的部分。-->
+        <!--scrolling="auto"：指定 <iframe> 元素的滚动方式为根据内容需要自动显示滚动条。-->
+        <!--rameborder="no"：设置 <iframe> 元素的边框为无，即不显示边框。-->
+        <!--height="100%" width="100%"：将 <iframe> 元素的高度和宽度都设置为父元素（.content-wrapper）的 100%。-->
+        <!--src="home.html"：指定要在 <iframe> 中显示的页面的 URL。在这个例子中，home.html 是嵌入到 <iframe> 中的页面的文件名-->
+        <iframe id="iframe" name="iframe"
+                style="overflow:visible;"
+                scrolling="auto"
+                frameborder="no" height="100%" width="100%"
+                src="home.html">
+        </iframe>
+    </div>
+
+    <!-- 底部导航 -->
+    <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+            <b>Version</b> 1.0.8
+        </div>
+        <strong>Copyright &copy; 2014-2017 <a href="http://www.itcast.cn">研究院研发部</a>.</strong> All rights reserved.
+    </footer>
+
+</div>
+<script src="../js/vue.js"></script>
+<script src="../js/axios-0.18.0.js"></script>
+<script src="../element-ui/lib/index.js"></script>
+<script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="../plugins/daterangepicker/moment.min.js"></script>
+<script src="../plugins/datepicker/bootstrap-datepicker.js"></script>
+<script src="../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+<script src="../plugins/adminLTE/js/app.min.js"></script>
+<script src="../plugins/bootstrap-markdown/js/bootstrap-markdown.js"></script>
+<script src="../plugins/input-mask/jquery.inputmask.js"></script>
+<script src="../plugins/flot/jquery.flot.min.js"></script>
+<script>
+    new Vue({
+        el:"#app",
+        data:{
+            menuList:[
+                {
+                    id: 1,
+                    parentId: 0, //所属模块id,一级菜单的父模块id为0
+                    name: "平台系统管理", //模块名称
+                    ctype: 0, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+                    curl:"system", //请求url路径,一级菜单没有访问路径（用于权限校验）
+                    children: [
+                        {
+                            id: 101,
+                            parentId: 1, //所属模块id,一级菜单的父模块id为0
+                            name: "部门管理", //模块名称
+                            ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+                            curl:"dept.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
+                        },
+                        {
+                            id: 102,
+                            parentId: 1, //所属模块id,一级菜单的父模块id为0
+                            name: "用户管理", //模块名称
+                            ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+                            curl:"user.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
+                        },
+                        {
+                            id: 103,
+                            parentId: 1, //所属模块id,一级菜单的父模块id为0
+                            name: "角色管理", //模块名称
+                            ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+                            curl:"role.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
+                        },
+                        {
+                            id: 104,
+                            parentId: 1, //所属模块id,一级菜单的父模块id为0
+                            name: "模块管理", //模块名称
+                            ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+                            curl:"module.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
+                        },
+                        {
+                            id: 105,
+                            parentId: 1, //所属模块id,一级菜单的父模块id为0
+                            name: "系统日志管理", //模块名称
+                            ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+                            curl:"systemLog.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
+                        }
+
+                    ]
+                },
+                {
+                    id: 2,
+                    parentId: 0, //所属模块id,一级菜单的父模块id为0
+                    name: "题库管理", //模块名称
+                    ctype: 0, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+                    curl:"store", //请求url路径,一级菜单没有访问路径（用于权限校验）
+                    children: [
+                        {
+                            id: 201,
+                            parentId: 2, //所属模块id,一级菜单的父模块id为0
+                            name: "题目学科管理", //模块名称
+                            ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+                            curl:"course.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
+                        },
+                        {
+                            id: 202,
+                            parentId: 2, //所属模块id,一级菜单的父模块id为0
+                            name: "题目类型管理", //模块名称
+                            ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+                            curl:"catalog.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
+                        },
+                        {
+                            id: 203,
+                            parentId: 2, //所属模块id,一级菜单的父模块id为0
+                            name: "企业管理", //模块名称
+                            ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+                            curl:"company.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
+                        },
+                        {
+                            id: 204,
+                            parentId: 2, //所属模块id,一级菜单的父模块id为0
+                            name: "题目管理", //模块名称
+                            ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+                            curl:"question.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
+                        },
+                        {
+                            id: 205,
+                            parentId: 2, //所属模块id,一级菜单的父模块id为0
+                            name: "题目审核日志", //模块名称
+                            ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+                            curl:"examineLog.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
+                        }
+
+                    ]
+                },
+                {
+                    id: 3,
+                    parentId: 0, //所属模块id,一级菜单的父模块id为0
+                    name: "会员管理", //模块名称
+                    ctype: 0, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+                    curl:"front", //请求url路径,一级菜单没有访问路径（用于权限校验）
+                    children: [
+                        {
+                            id: 301,
+                            parentId: 3, //所属模块id,一级菜单的父模块id为0
+                            name: "会员账号管理", //模块名称
+                            ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+                            curl:"member.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
+                        },
+                        {
+                            id: 302,
+                            parentId: 3, //所属模块id,一级菜单的父模块id为0
+                            name: "会员答题管理", //模块名称
+                            ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+                            curl:"examinationPaper.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
+                        },
+                    ]
+                }
+            ]
+        }
+    })
+</script>
+<script>
+    function setSidebarActive(th){
+        $(th).parent("li").siblings().removeClass("active");
+        $(th).parent("li").addClass("active");
+    }
+    function setIframeHeight(iframe) {
+        // 在页面加载完成后，获取 <iframe> 内部内容的高度，并将 <iframe> 的高度设置为相应的值，以确保其内部内容完全显示，而不出现滚动条。
+        if (iframe) {
+            // 获取 <iframe> 对应的窗口对象
+            var iframeWin = iframe.contentWindow || iframe.contentDocument.parentWindow;
+            // 从 iframeWin 对象中获取具有 id 为 'frameContent' 的元素，并获取其滚动高度（即完整内容的高度）
+            var height = iframeWin.document.getElementById('frameContent').scrollHeight;
+            iframe.height =height;
+        }
+    };
+
+    var iframe= document.getElementById("iframe");
+    // 在 <iframe> 加载完成后，执行匿名函数，调用 setIframeHeight(iframe) 来设置 <iframe> 的高度以适应其内容。
+    iframe.onload = function () {
+        setIframeHeight(iframe);
+    };
+</script>
+</body>
+</html>
+

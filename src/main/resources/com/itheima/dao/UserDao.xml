@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.dao.UserDao">
+    <!--配置实体类属性和数据库表中列的对应关系-->
+    <resultMap id="BaseResultMap" type="com.itheima.domain.User">
+        <id column="user_id" property="id"/>
+        <result column="email" property="email"/>
+        <result column="user_name" property="userName"/>
+        <result column="password" property="password"/>
+        <result column="state" jdbcType="DECIMAL" property="state"/>
+        <result column="gender" jdbcType="CHAR" property="gender"/>
+        <result column="telephone" property="telephone"/>
+        <result column="birthday" property="birthday"/>
+        <result column="join_date" property="joinDate"/>
+        <result column="dept_id" property="deptId"/>
+        <!--配置用户所属部门-->
+        <association
+                property="dept"
+                column="dept_id"
+                javaType="com.itheima.domain.Dept"
+                select="com.itheima.dao.DeptDao.findById"
+        />
+    </resultMap>
+
+
+    <!--配置查询所有，带条件-->
+    <select id="findAll" resultMap="BaseResultMap">
+        select user_id, email, user_name,  password, state, gender,
+        telephone, birthday, join_date, dept_id from ss_user
+    </select>
+
+    <!--配置根据ID查询-->
+    <select id="findById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select user_id, email, user_name,  password, state, gender,
+        telephone, birthday, join_date, dept_id
+        from ss_user
+        where user_id = #{id}
+    </select>
+
+    <!--配置根据id删除-->
+    <delete id="delete" parameterType="java.lang.String">
+        delete from ss_user where user_id = #{id}
+    </delete>
+
+    <!--配置全字段插入，当某个字段没有值时，插入null-->
+    <insert id="save" parameterType="com.itheima.domain.User">
+        insert into ss_user (user_id, email, user_name,  password, state,
+        gender, telephone, birthday, join_date, dept_id)
+        values (#{id}, #{email}, #{userName},
+        #{password}, #{state,jdbcType=DECIMAL}, #{gender},
+        #{telephone}, #{birthday}, #{joinDate},
+        #{deptId})
+    </insert>
+
+    <!--配置全字段更新，当提供的数据为null时，数据库数据会被更新为null-->
+    <update id="update" parameterType="com.itheima.domain.User">
+        update ss_user
+        set email = #{email},
+        user_name = #{userName},
+        password = #{password},
+        state = #{state},
+        gender = #{gender},
+        telephone = #{telephone},
+        birthday = #{birthday},
+        join_date = #{joinDate},
+        dept_id = #{deptId}
+        where user_id = #{id}
+    </update>
+
+    <!--根据id删除关联的角色信息 -->
+    <delete id="deleteRoleAssociationByUserId">
+  delete from ss_role_user where user_id=#{id}
+</delete>
+</mapper>
