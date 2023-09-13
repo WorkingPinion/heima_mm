@@ -204,34 +204,96 @@
             created(){ //vue对象创建完成的回调函数
                 this.findByPage()
             },
-            methods:{
+            methods: {
                 //分页查询方法
-                findByPage(){
-
+                findByPage() {
+                    axios.get("../store/course/findByPage", {params: this.pagination}).then((resp) => {
+                        if (resp.data.flag) {
+                            //展示分页数据,resp.data得到Result，resp.data.data得到PageInfo
+                            this.dataList = resp.data.data.list;
+                            //展示分页条
+                            this.pagination.total = resp.data.data.total;
+                        } else {
+                            this.$message.error(resp.data.message);
+                        }
+                    })
                 },
                 //重置表单方法
-                resetForm(){
-                    this.formData={};
+                resetForm() {
+                    this.formData = {};
                 },
                 //新建方法
-                handleCreate(){
-
+                handleCreate() {
+                    this.dialogFormVisible4Add = true;
                 },
                 //保存方法
-                handleAdd(){
-
+                handleAdd() {
+                    //发送异步请求
+                    axios.post("../store/course/save", this.formData).then(resp => {
+                        if (resp.data.flag) {
+                            //重新分页查询
+                            this.findByPage();
+                            //隐藏弹出框
+                            this.dialogFormVisible4Add = false;
+                            this.$message.success(resp.data.message);
+                        } else {
+                            this.$message.error(resp.data.message);
+                        }
+                    })
                 },
                 //修改方法
-                handleUpdate(id){
-
+                handleUpdate(id) {
+                    //展示弹出框
+                    this.dialogFormVisible4Edit = true;
+                    //发送异步请求，根据id查询
+                    axios.get("../store/course/findById?id=" + id).then(resp => {
+                        if (resp.data.flag) {
+                            //展示信息
+                            this.formData = resp.data.data;
+                            //处理日期回显问题
+                            this.formData.expirationDate = this.formData.expirationDate.split(" ")[0];
+                        } else {
+                            this.$message.error(resp.data.message);
+                        }
+                    })
                 },
                 //编辑方法
-                handleEdit(){
-
+                handleEdit() {
+                    //发送异步请求
+                    axios.post("../store/course/edit", this.formData).then(resp => {
+                        if (resp.data.flag) {
+                            //重新分页查询
+                            this.findByPage();
+                            //隐藏弹出框
+                            this.dialogFormVisible4Edit = false;
+                        } else {
+                            this.$message.error(resp.data.message);
+                        }
+                    })
                 },
                 //删除方法
-                handleDelete(){
-
+                handleDelete() {
+                    if (this.checkedItemIds.length) {
+                        //弹出确认框
+                        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                            type: 'warning'
+                        }).then(() => {
+                            //发送异步请求
+                            axios.post("../store/course/delete", this.checkedItemIds).then(resp => {
+                                if (resp.data.flag) {
+                                    this.$message.success(resp.data.message);
+                                    //重新分页查询
+                                    this.findByPage();
+                                } else {
+                                    this.$message.error(resp.data.message);
+                                }
+                            });
+                        });
+                    } else {
+                        this.$message.error("请至少选择一个条目");
+                    }
                 },
                 //改变每页条数时执行的函数
                 handleSizeChange(pageSize) {

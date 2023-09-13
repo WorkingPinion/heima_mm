@@ -48,410 +48,510 @@
     </style>
 </head>
 <body>
-    <div id="frameContent" class="content-wrapper" style="margin-left:0px;">
-        <!-- 内容头部 /-->
-        <section class="content-header">
-            <h1>题库管理
-                <small>题目管理</small>
-            </h1>
-            <ol class="breadcrumb">
-                <li><a href="all-admin-index.html"><i class="fa fa-dashboard"></i> 首页</a></li>
-            </ol>
-        </section>
-        <!-- 正文区域 -->
-        <section class="content">
-            <!-- .box-body -->
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">题目列表</h3>
-                </div>
-
-                <!-- 数据表格 -->
-                <div class="box-body">
-                    <div class="table-box">
-                        <!--工具栏-->
-                        <div class="pull-left">
-                            <div class="form-group form-inline">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-default" title="新建" @click='handleCreate()'><i class="fa fa-file-o"></i> 新建</button>
-                                    <button type="button" class="btn btn-default" title="删除" @click='handleDelete()'><i class="fa fa-trash-o"></i> 删除</button>
-                                    <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新</button>
-                                    <button type="button" class="btn btn-default" title="导出题目" @click='toExport()'> <i class="fa fa-download"></i>导出题目</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="box-tools pull-right">
-                            <div class="has-feedback">
-                                <input type="text" class="form-control input-sm" placeholder="搜索">
-                                <span class="glyphicon glyphicon-search form-control-feedback"></span>
-                            </div>
-                        </div>
-                        <!--工具栏/-->
-
-                        <!--数据列表-->
-                        <table id="dataList" class="table table-bordered table-striped table-hover dataTable">
-                            <thead>
-                            <tr>
-                                <th class="" style="padding-right:0px;"></th>
-                                <th class="sorting">企业</th>
-                                <th class="sorting">类别</th>
-                                <th class="sorting">题目</th>
-                                <th class="sorting">类型</th>
-                                <th class="sorting">难度</th>
-                                <th class="sorting">经典面试题</th>
-                                <th class="sorting">状态</th>
-                                <th class="sorting">审核结果</th>
-                                <th class="text-center">操作</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="question in dataList" class="odd" onmouseover="this.className='highlight'" onmouseout="this.className='odd'" >
-                                    <td><input type="checkbox" v-model="checkedItemIds" :value="question.id"/></td>
-                                    <td>{{question.company?question.company.name:""}}</td>
-                                    <td>{{question.catalog?question.catalog.name:""}}</td>
-                                    <td>{{question.subject}}</td>
-                                    <td v-if="question.type==1">单选</td>
-                                    <td v-else-if="question.type==2">多选</td>
-                                    <td v-else>简答</td>
-                                    <td><span v-for="count in parseInt(question.difficulty)">★</span></td>
-                                    <td>{{question.isClassic==1?"经典题":"普通题"}}</td>
-                                    <td v-if="question.state==1"><font color='green'>启用</font></td>
-                                    <td v-else><font color='red'>禁用</font></td>
-                                    <td v-if="question.reviewStatus==-1"><font color="red">审核不通过</font></td>
-                                    <td v-else-if="question.reviewStatus==0">审核中</td>
-                                    <td v-else><font color="green">审核通过</font></td>
-                                    <th class="text-center">
-                                        <button type="button" class="btn bg-olive btn-xs" @click='handleUpdate(question.id)'>编辑</button>
-                                        <button type="button" class="btn bg-olive btn-xs" @click='handleToQuestionItem(question.id)'>配置选项</button>
-                                        <button type="button" class="btn bg-olive btn-xs" @click='handleAudit(question.id)'>审核</button>
-                                    </th>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <!--分页条-->
-                <div class="box-footer">
-                    <!--分页组件-->
-                    <el-pagination
-                            @size-change="handleSizeChange"
-                            @current-change="handleCurrentChange"
-                            :current-page="pagination.currentPage"
-                            :page-sizes="[3,5,8]"
-                            :page-size="pagination.pageSize"
-                            layout="total, sizes, prev, pager, next, jumper"
-                            :total="pagination.total">
-                    </el-pagination>
-                </div>
+<div id="frameContent" class="content-wrapper" style="margin-left:0px;">
+    <!-- 内容头部 /-->
+    <section class="content-header">
+        <h1>题库管理
+            <small>题目管理</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="all-admin-index.html"><i class="fa fa-dashboard"></i> 首页</a></li>
+        </ol>
+    </section>
+    <!-- 正文区域 -->
+    <section class="content">
+        <!-- .box-body -->
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">题目列表</h3>
             </div>
 
-        </section>
-        <!--添加弹出框-->
-        <el-dialog title="添加目录信息" :visible.sync="dialogFormVisible4Add" @close="resetForm()">
-            <!--
-                :model="formData": 关联数据
-                :rules: 关联校验规则
-                ref： 在获取表单对象时使用
-            -->
-            <el-form :model="formData" ref="addForm" label-width="100px" class="demo-ruleForm">
-                <div class="tab-pane active" id="tab-form">
-                    <div class="row data-type">
-
-                        <div class="col-md-2 title">所属企业</div>
-                        <div class="col-md-4 data">
-                            <select class="form-control" v-model="formData.companyId">
-                                <option v-for="item in companyList" :value="item.id">{{item.name}}</option>
-                            </select>
+            <!-- 数据表格 -->
+            <div class="box-body">
+                <div class="table-box">
+                    <!--工具栏-->
+                    <div class="pull-left">
+                        <div class="form-group form-inline">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default" title="新建" @click='handleCreate()'><i class="fa fa-file-o"></i> 新建</button>
+                                <button type="button" class="btn btn-default" title="删除" @click='handleDelete()'><i class="fa fa-trash-o"></i> 删除</button>
+                                <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新</button>
+                                <button type="button" class="btn btn-default" title="导出题目" @click='toExport()'> <i class="fa fa-download"></i>导出题目</button>
+                            </div>
                         </div>
-
-                        <div class="col-md-2 title">所属类别</div>
-                        <div class="col-md-4 data">
-                            <select class="form-control" v-model="formData.catalogId">
-                                <option v-for="item in catalogList" :value="item.id">{{item.name}}</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-2 title rowHeight2x">题目简介</div>
-                        <div class="col-md-10 data rowHeight2x">
-                            <textarea class="form-control" rows="3" v-model="formData.remark"></textarea>
-                        </div>
-
-
-                        <div class="col-md-2 title rowHeight2x">题干</div>
-                        <div class="col-md-10 data rowHeight2x">
-                            <textarea class="form-control" rows="3"v-model="formData.subject"></textarea>
-                        </div>
-
-                        <!--在表单中添加文件上传向-->
-                        <div class="col-md-2 title"  style="height: 200px;line-height: 230px">题干图片</div>
-                        <div class="col-md-10 data"  style="height: 200px">
-                            <!--文件上传组件-->
-                            <el-upload
-                                    class="avatar-uploader"
-                                    action="../store/question/upload"
-                                    :show-file-list="false"
-                                    :on-success="handleAvatarSuccess"
-                                    :before-upload="beforeAvatarUpload">
-                                <!--文件上传成功之后用于预览图片的img标签-->
-                                <img v-if="imgUrl" :src="imgUrl" class="avatar">
-                                <!--文件上传之前的+字图标-->
-                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                            </el-upload>
-                        </div>
-
-                        <div class="col-md-2 title rowHeight2x">题目分析</div>
-                        <div class="col-md-10 data rowHeight2x">
-                            <textarea class="form-control" rows="3" v-model="formData.analysis"></textarea>
-                        </div>
-
-                        <div class="col-md-2 title">题目类型</div>
-                        <div class="col-md-4 data">
-                            <select class="form-control"v-model="formData.type">
-                                <option value="1">单选题</option>
-                                <option value="2">多选题</option>
-                                <option value="3">简答题</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-2 title">难易程度</div>
-                        <div class="col-md-4 data">
-                            <select class="form-control" v-model="formData.difficulty">
-                                <option value="1">★</option>
-                                <option value="2">★★</option>
-                                <option value="3">★★★</option>
-                                <option value="4">★★★★</option>
-                                <option value="5">★★★★★</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-2 title">是否经典</div>
-                        <div class="col-md-4 data">
-                            <select class="form-control" v-model="formData.isClassic">
-                                <option value="1">经典题</option>
-                                <option value="0">普通题</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-2 title">题目状态</div>
-                        <div class="col-md-4 data">
-                            <select class="form-control" v-model="formData.state">
-                                <option value="1">启用</option>
-                                <option value="0">禁用</option>
-                            </select>
-                        </div>
-
                     </div>
-                </div>
-                <div class="box-tools text-center">
-                    <button type="button" @click="handleAdd()" class="btn bg-maroon">保存</button>
-                    <button type="button" class="btn bg-default" @click="resetForm();dialogFormVisible4Add=false">返回</button>
-                </div>
-            </el-form>
-        </el-dialog>
-        <!--编辑弹出框-->
-        <el-dialog title="编辑目录信息" :visible.sync="dialogFormVisible4Edit" @close="resetForm()">
-            <!--
-                :model="formData": 关联数据
-                :rules: 关联校验规则
-                ref： 在获取表单对象时使用
-            -->
-            <el-form :model="formData" ref="editForm" label-width="100px" class="demo-ruleForm">
-                <div class="tab-pane active">
-                    <div class="row data-type">
-
-                        <div class="col-md-2 title">所属企业</div>
-                        <div class="col-md-4 data">
-                            <select class="form-control" v-model="formData.companyId">
-                                <option v-for="item in companyList" :value="item.id">{{item.name}}</option>
-                            </select>
+                    <div class="box-tools pull-right">
+                        <div class="has-feedback">
+                            <input type="text" class="form-control input-sm" placeholder="搜索">
+                            <span class="glyphicon glyphicon-search form-control-feedback"></span>
                         </div>
-
-                        <div class="col-md-2 title">所属类别</div>
-                        <div class="col-md-4 data">
-                            <select class="form-control" v-model="formData.catalogId">
-                                <option v-for="item in catalogList" :value="item.id">{{item.name}}</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-2 title rowHeight2x">题目简介</div>
-                        <div class="col-md-10 data rowHeight2x">
-                            <textarea class="form-control" rows="3" v-model="formData.remark"></textarea>
-                        </div>
-
-
-                        <div class="col-md-2 title rowHeight2x">题干</div>
-                        <div class="col-md-10 data rowHeight2x">
-                            <textarea class="form-control" rows="3"v-model="formData.subject"></textarea>
-                        </div>
-
-                        <!--在表单中添加文件上传向-->
-                        <div class="col-md-2 title"  style="height: 200px;line-height: 230px">题干图片</div>
-                        <div class="col-md-10 data"  style="height: 200px">
-                            <!--文件上传组件-->
-                            <el-upload
-                                    class="avatar-uploader"
-                                    action="../store/question/upload"
-                                    :show-file-list="false"
-                                    :on-success="handleAvatarSuccess"
-                                    :before-upload="beforeAvatarUpload">
-                                <!--文件上传成功之后用于预览图片的img标签-->
-                                <img v-if="imgUrl" :src="imgUrl" class="avatar">
-                                <!--文件上传之前的+字图标-->
-                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                            </el-upload>
-                        </div>
-
-                        <div class="col-md-2 title rowHeight2x">题目分析</div>
-                        <div class="col-md-10 data rowHeight2x">
-                            <textarea class="form-control" rows="3" v-model="formData.analysis"></textarea>
-                        </div>
-
-                        <div class="col-md-2 title">题目类型</div>
-                        <div class="col-md-4 data">
-                            <select class="form-control"v-model="formData.type">
-                                <option value="1">单选题</option>
-                                <option value="2">多选题</option>
-                                <option value="3">简答题</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-2 title">难易程度</div>
-                        <div class="col-md-4 data">
-                            <select class="form-control" v-model="formData.difficulty">
-                                <option value="1">★</option>
-                                <option value="2">★★</option>
-                                <option value="3">★★★</option>
-                                <option value="4">★★★★</option>
-                                <option value="5">★★★★★</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-2 title">是否经典</div>
-                        <div class="col-md-4 data">
-                            <select class="form-control" v-model="formData.isClassic">
-                                <option value="1">经典题</option>
-                                <option value="0">普通题</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-2 title">题目状态</div>
-                        <div class="col-md-4 data">
-                            <select class="form-control" v-model="formData.state">
-                                <option value="1">启用</option>
-                                <option value="0">禁用</option>
-                            </select>
-                        </div>
-
                     </div>
+                    <!--工具栏/-->
+
+                    <!--数据列表-->
+                    <table id="dataList" class="table table-bordered table-striped table-hover dataTable">
+                        <thead>
+                        <tr>
+                            <th class="" style="padding-right:0px;"></th>
+                            <th class="sorting">企业</th>
+                            <th class="sorting">类别</th>
+                            <th class="sorting">题目</th>
+                            <th class="sorting">类型</th>
+                            <th class="sorting">难度</th>
+                            <th class="sorting">经典面试题</th>
+                            <th class="sorting">状态</th>
+                            <th class="sorting">审核结果</th>
+                            <th class="text-center">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="question in dataList" class="odd" onmouseover="this.className='highlight'" onmouseout="this.className='odd'" >
+                            <td><input type="checkbox" v-model="checkedItemIds" :value="question.id"/></td>
+                            <td>{{question.company?question.company.name:""}}</td>
+                            <td>{{question.catalog?question.catalog.name:""}}</td>
+                            <td>{{question.subject}}</td>
+                            <td v-if="question.type==1">单选</td>
+                            <td v-else-if="question.type==2">多选</td>
+                            <td v-else>简答</td>
+                            <td><span v-for="count in parseInt(question.difficulty)">★</span></td>
+                            <td>{{question.isClassic==1?"经典题":"普通题"}}</td>
+                            <td v-if="question.state==1"><font color='green'>启用</font></td>
+                            <td v-else><font color='red'>禁用</font></td>
+                            <td v-if="question.reviewStatus==-1"><font color="red">审核不通过</font></td>
+                            <td v-else-if="question.reviewStatus==0">审核中</td>
+                            <td v-else><font color="green">审核通过</font></td>
+                            <th class="text-center">
+                                <button type="button" class="btn bg-olive btn-xs" @click='handleUpdate(question.id)'>编辑</button>
+                                <button type="button" class="btn bg-olive btn-xs" @click='handleToQuestionItem(question.id)'>配置选项</button>
+                                <button type="button" class="btn bg-olive btn-xs" @click='handleAudit(question.id)'>审核</button>
+                            </th>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="box-tools text-center">
-                    <button type="button" @click="handleEdit()" class="btn bg-maroon">保存</button>
-                    <button type="button" class="btn bg-default" @click="resetForm();dialogFormVisible4Edit=false">返回</button>
+            </div>
+            <!--分页条-->
+            <div class="box-footer">
+                <!--分页组件-->
+                <el-pagination
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="pagination.currentPage"
+                        :page-sizes="[3,5,8]"
+                        :page-size="pagination.pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="pagination.total">
+                </el-pagination>
+            </div>
+        </div>
+
+    </section>
+    <!--添加弹出框-->
+    <el-dialog title="添加目录信息" :visible.sync="dialogFormVisible4Add" @close="resetForm()">
+        <!--
+            :model="formData": 关联数据
+            :rules: 关联校验规则
+            ref： 在获取表单对象时使用
+        -->
+        <el-form :model="formData" ref="addForm" label-width="100px" class="demo-ruleForm">
+            <div class="tab-pane active" id="tab-form">
+                <div class="row data-type">
+
+                    <div class="col-md-2 title">所属企业</div>
+                    <div class="col-md-4 data">
+                        <select class="form-control" v-model="formData.companyId">
+                            <option v-for="item in companyList" :value="item.id">{{item.name}}</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2 title">所属类别</div>
+                    <div class="col-md-4 data">
+                        <select class="form-control" v-model="formData.catalogId">
+                            <option v-for="item in catalogList" :value="item.id">{{item.name}}</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2 title rowHeight2x">题目简介</div>
+                    <div class="col-md-10 data rowHeight2x">
+                        <textarea class="form-control" rows="3" v-model="formData.remark"></textarea>
+                    </div>
+
+
+                    <div class="col-md-2 title rowHeight2x">题干</div>
+                    <div class="col-md-10 data rowHeight2x">
+                        <textarea class="form-control" rows="3"v-model="formData.subject"></textarea>
+                    </div>
+
+                    <!--在表单中添加文件上传向-->
+                    <div class="col-md-2 title"  style="height: 200px;line-height: 230px">题干图片</div>
+                    <div class="col-md-10 data"  style="height: 200px">
+                        <!--文件上传组件-->
+                        <el-upload
+                                class="avatar-uploader"
+                                action="../store/question/upload"
+                                :show-file-list="false"
+                                :on-success="handleAvatarSuccess"
+                                :before-upload="beforeAvatarUpload">
+                            <!--文件上传成功之后用于预览图片的img标签-->
+                            <img v-if="imgUrl" :src="imgUrl" class="avatar">
+                            <!--文件上传之前的+字图标-->
+                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        </el-upload>
+                    </div>
+
+                    <div class="col-md-2 title rowHeight2x">题目分析</div>
+                    <div class="col-md-10 data rowHeight2x">
+                        <textarea class="form-control" rows="3" v-model="formData.analysis"></textarea>
+                    </div>
+
+                    <div class="col-md-2 title">题目类型</div>
+                    <div class="col-md-4 data">
+                        <select class="form-control"v-model="formData.type">
+                            <option value="1">单选题</option>
+                            <option value="2">多选题</option>
+                            <option value="3">简答题</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2 title">难易程度</div>
+                    <div class="col-md-4 data">
+                        <select class="form-control" v-model="formData.difficulty">
+                            <option value="1">★</option>
+                            <option value="2">★★</option>
+                            <option value="3">★★★</option>
+                            <option value="4">★★★★</option>
+                            <option value="5">★★★★★</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2 title">是否经典</div>
+                    <div class="col-md-4 data">
+                        <select class="form-control" v-model="formData.isClassic">
+                            <option value="1">经典题</option>
+                            <option value="0">普通题</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2 title">题目状态</div>
+                    <div class="col-md-4 data">
+                        <select class="form-control" v-model="formData.state">
+                            <option value="1">启用</option>
+                            <option value="0">禁用</option>
+                        </select>
+                    </div>
+
                 </div>
-            </el-form>
-        </el-dialog>
-    </div>
-    <script>
-        new Vue({
-            el:"#frameContent",
-            data:{
-                checkedItemIds:[], //选中的复选框id们
-                dataList: [],//当前页要展示的分页列表数据
-                pagination:{
-                    currentPage:1, //当前页数
-                    pageSize:5, //每页条数
-                    total:100 //总条数
-                },
-                formData: {
-                    type:"1",
-                    difficulty:"1",
-                    isClassic:"1",
-                    state:"1"
-                },//表单数据
-                imgUrl: null,//上传成功的图片名称
-                companyList:[],//企业列表
-                catalogList:[], //目录列表
-                dialogFormVisible4Add: false,//增加表单是否可见
-                dialogFormVisible4Edit:false//编辑表单是否可见
+            </div>
+            <div class="box-tools text-center">
+                <button type="button" @click="handleAdd()" class="btn bg-maroon">保存</button>
+                <button type="button" class="btn bg-default" @click="resetForm();dialogFormVisible4Add=false">返回</button>
+            </div>
+        </el-form>
+    </el-dialog>
+    <!--编辑弹出框-->
+    <el-dialog title="编辑目录信息" :visible.sync="dialogFormVisible4Edit" @close="resetForm()">
+        <!--
+            :model="formData": 关联数据
+            :rules: 关联校验规则
+            ref： 在获取表单对象时使用
+        -->
+        <el-form :model="formData" ref="editForm" label-width="100px" class="demo-ruleForm">
+            <div class="tab-pane active">
+                <div class="row data-type">
+
+                    <div class="col-md-2 title">所属企业</div>
+                    <div class="col-md-4 data">
+                        <select class="form-control" v-model="formData.companyId">
+                            <option v-for="item in companyList" :value="item.id">{{item.name}}</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2 title">所属类别</div>
+                    <div class="col-md-4 data">
+                        <select class="form-control" v-model="formData.catalogId">
+                            <option v-for="item in catalogList" :value="item.id">{{item.name}}</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2 title rowHeight2x">题目简介</div>
+                    <div class="col-md-10 data rowHeight2x">
+                        <textarea class="form-control" rows="3" v-model="formData.remark"></textarea>
+                    </div>
+
+
+                    <div class="col-md-2 title rowHeight2x">题干</div>
+                    <div class="col-md-10 data rowHeight2x">
+                        <textarea class="form-control" rows="3"v-model="formData.subject"></textarea>
+                    </div>
+
+                    <!--在表单中添加文件上传向-->
+                    <div class="col-md-2 title"  style="height: 200px;line-height: 230px">题干图片</div>
+                    <div class="col-md-10 data"  style="height: 200px">
+                        <!--文件上传组件-->
+                        <el-upload
+                                class="avatar-uploader"
+                                action="../store/question/upload"
+                                :show-file-list="false"
+                                :on-success="handleAvatarSuccess"
+                                :before-upload="beforeAvatarUpload">
+                            <!--文件上传成功之后用于预览图片的img标签-->
+                            <img v-if="imgUrl" :src="imgUrl" class="avatar">
+                            <!--文件上传之前的+字图标-->
+                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        </el-upload>
+                    </div>
+
+                    <div class="col-md-2 title rowHeight2x">题目分析</div>
+                    <div class="col-md-10 data rowHeight2x">
+                        <textarea class="form-control" rows="3" v-model="formData.analysis"></textarea>
+                    </div>
+
+                    <div class="col-md-2 title">题目类型</div>
+                    <div class="col-md-4 data">
+                        <select class="form-control"v-model="formData.type">
+                            <option value="1">单选题</option>
+                            <option value="2">多选题</option>
+                            <option value="3">简答题</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2 title">难易程度</div>
+                    <div class="col-md-4 data">
+                        <select class="form-control" v-model="formData.difficulty">
+                            <option value="1">★</option>
+                            <option value="2">★★</option>
+                            <option value="3">★★★</option>
+                            <option value="4">★★★★</option>
+                            <option value="5">★★★★★</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2 title">是否经典</div>
+                    <div class="col-md-4 data">
+                        <select class="form-control" v-model="formData.isClassic">
+                            <option value="1">经典题</option>
+                            <option value="0">普通题</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2 title">题目状态</div>
+                    <div class="col-md-4 data">
+                        <select class="form-control" v-model="formData.state">
+                            <option value="1">启用</option>
+                            <option value="0">禁用</option>
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+            <div class="box-tools text-center">
+                <button type="button" @click="handleEdit()" class="btn bg-maroon">保存</button>
+                <button type="button" class="btn bg-default" @click="resetForm();dialogFormVisible4Edit=false">返回</button>
+            </div>
+        </el-form>
+    </el-dialog>
+</div>
+<script>
+    new Vue({
+        el:"#frameContent",
+        data:{
+            checkedItemIds:[], //选中的复选框id们
+            dataList: [],//当前页要展示的分页列表数据
+            pagination:{
+                currentPage:1, //当前页数
+                pageSize:5, //每页条数
+                total:100 //总条数
             },
-            created(){ //vue对象创建完成的回调函数
-                this.findByPage()
+            formData: {
+                type:"1",
+                difficulty:"1",
+                isClassic:"1",
+                state:"1"
+            },//表单数据
+            imgUrl: null,//上传成功的图片名称
+            companyList:[],//企业列表
+            catalogList:[], //目录列表
+            dialogFormVisible4Add: false,//增加表单是否可见
+            dialogFormVisible4Edit:false//编辑表单是否可见
+        },
+        created(){ //vue对象创建完成的回调函数
+            this.findByPage()
+        },
+        methods: {
+            //分页查询方法
+            findByPage() {
+                axios.get("../store/question/findByPage", {params: this.pagination}).then((resp) => {
+                    if (resp.data.flag) {
+                        //展示分页数据,resp.data得到Result，resp.data.data得到PageInfo
+                        this.dataList = resp.data.data.list;
+                        //展示分页条
+                        this.pagination.total = resp.data.data.total;
+                    } else {
+                        this.$message.error(resp.data.message);
+                    }
+                })
             },
-            methods:{
-                //分页查询方法
-                findByPage(){
-
-                },
-                //重置表单方法
-                resetForm(){
-                    this.formData={};
-                },
-                //新建方法
-                handleCreate(){
-
-                },
-                //保存方法
-                handleAdd(){
-
-                },
-                //修改方法
-                handleUpdate(id){
-
-                },
-                //编辑方法
-                handleEdit(){
-
-                },
-                //删除方法
-                handleDelete(){
-
-                },
-                //配置选项的方法
-                handleToQuestionItem(id){
-                    //跳转到问题选项页面questionItem.html，将问题id带过去
-
-                },
-                //题目导出的方法
-                toExport(id){
-
-                },
-                //改变每页条数时执行的函数
-                handleSizeChange(pageSize) {
-                    //修改分页查询的参数
-                    this.pagination.pageSize = pageSize;
-                    //重新执行查询
-                    this.findByPage();
-                },
-                //改变页码时执行的函数
-                handleCurrentChange(pageNum) {
-                    //修改分页查询的参数
-                    this.pagination.currentPage = pageNum;
-                    //重新执行查询
-                    this.findByPage();
-                },
-                //文件上传成功的回调函数
-                handleAvatarSuccess(res, file) {
-                    //res表示响应回来的结果（图片名称）,file表示前端上传过去的文件对象
-                    console.log(file);
-                    console.log(res); //就是响应回来的result对象
-
-                },
-                //文件上传之前的回调函数,用于校验
-                beforeAvatarUpload(file) {
-                    const isJPG = (file.type === 'image/jpeg')||(file.type ==='image/png');
-                    const isLt2M = file.size / 1024 / 1024 < 10;
-
-                    if (!isJPG) {
-                        this.$message.error('上传头像图片只能是 JPG/PNG 格式!');
+            //重置表单方法
+            resetForm() {
+                this.formData = {};
+            },
+            //新建方法
+            handleCreate(){
+                this.dialogFormVisible4Add=true;
+                //发送异步请求，查询所有企业信息
+                axios.get("../store/company/findAll").then(resp=>{
+                    if(resp.data.flag){
+                        //给企业列表赋值
+                        this.companyList=resp.data.data;
+                    }else{
+                        this.$message.error(resp.data.message);
                     }
-                    if (!isLt2M) {
-                        this.$message.error('上传头像图片大小不能超过 10MB!');
+                });
+                //发送异步请求，查询所有目录信息
+                axios.get("../store/catalog/findAll").then(resp=>{
+                    if(resp.data.flag){
+                        //给目录/题目类型列表赋值
+                        this.catalogList=resp.data.data;
+                    }else{
+                        this.$message.error(resp.data.message);
                     }
-                    return isJPG && isLt2M;
+                });
+                //给imgUrl重置
+                this.imgUrl=null;
+            },
+            //保存方法
+            handleAdd() {
+                //发送异步请求
+                axios.post("../store/question/save", this.formData).then(resp => {
+                    if (resp.data.flag) {
+                        //重新分页查询
+                        this.findByPage();
+                        //隐藏弹出框
+                        this.dialogFormVisible4Add = false;
+                        this.$message.success(resp.data.message);
+                    } else {
+                        this.$message.error(resp.data.message);
+                    }
+                })
+            },
+            //修改方法
+            handleUpdate(id){
+                //重置表单,不需要显示formData默认信息
+                this.resetForm();
+                //给imgUrl重置
+                this.imgUrl=null;
+                //展示弹出框
+                this.dialogFormVisible4Edit=true;
+                //发送异步请求，根据id查询
+                axios.post("../store/question/findById?id="+id).then(resp=>{
+                    if(resp.data.flag){
+                        //展示信息
+                        this.formData=resp.data.data;
+                        //有图片就展示图片
+                        if(this.formData.picture){
+                            this.imgUrl="../upload/"+this.formData.picture;
+                        }
+                    }else{
+                        this.$message.error(resp.data.message);
+                    }
+                });
+                axios.get("../store/company/findAll").then(resp=>{
+                    if(resp.data.flag){
+                        //给企业列表赋值
+                        this.companyList=resp.data.data;
+                    }else{
+                        this.$message.error(resp.data.message);
+                    }
+                });
+                //发送异步请求，查询所有目录信息
+                axios.get("../store/catalog/findAll").then(resp=>{
+                    if(resp.data.flag){
+                        //给目录/题目类型列表赋值
+                        this.catalogList=resp.data.data;
+                    }else{
+                        this.$message.error(resp.data.message);
+                    }
+                });
+            },
+            //编辑方法
+            handleEdit() {
+                //发送异步请求
+                axios.post("../store/question/edit", this.formData).then(resp => {
+                    if (resp.data.flag) {
+                        //重新分页查询
+                        this.findByPage();
+                        //隐藏弹出框
+                        this.dialogFormVisible4Edit = false;
+                    } else {
+                        this.$message.error(resp.data.message);
+                    }
+                })
+            },
+            //删除方法
+            handleDelete() {
+                if (this.checkedItemIds.length) {
+                    //弹出确认框
+                    this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        //发送异步请求
+                        axios.post("../store/question/delete", this.checkedItemIds).then(resp => {
+                            if (resp.data.flag) {
+                                this.$message.success(resp.data.message);
+                                //重新分页查询
+                                this.findByPage();
+                            } else {
+                                this.$message.error(resp.data.message);
+                            }
+                        });
+                    });
+                } else {
+                    this.$message.error("请至少选择一个条目");
                 }
-            }
-        });
-    </script>
+            },
+            //改变每页条数时执行的函数
+            handleSizeChange(pageSize) {
+                //修改分页查询的参数
+                this.pagination.pageSize = pageSize;
+                //重新执行查询
+                this.findByPage();
+            },
+            //改变页码时执行的函数
+            handleCurrentChange(pageNum) {
+                //修改分页查询的参数
+                this.pagination.currentPage = pageNum;
+                //重新执行查询
+                this.findByPage();
+            },
+            //文件上传成功的回调函数
+            handleAvatarSuccess(res, file) {
+                //res表示响应回来的结果（图片名称）,file表示前端上传过去的文件对象
+                this.imgUrl="../upload/"+res.data;
+                //绑定到formData的picture属性中，随着新增和编辑时将图片名称保存到数据库
+                this.formData.picture=res.data;
+            },
+            //文件上传之前的回调函数,用于校验
+            beforeAvatarUpload(file) {
+                const isJPG = (file.type === 'image/jpeg')||(file.type ==='image/png');
+                const isLt2M = file.size / 1024 / 1024 < 10;
+
+                if (!isJPG) {
+                    this.$message.error('上传头像图片只能是 JPG 格式!');
+                }
+                if (!isLt2M) {
+                    this.$message.error('上传头像图片大小不能超过 10MB!');
+                }
+                return isJPG && isLt2M;
+            },
+            //配置选项的方法
+            handleToQuestionItem(id){
+                location.href="questionItem.html?questionId="+id;
+            },
+        }
+    });
+</script>
 </body>
 
 </html>

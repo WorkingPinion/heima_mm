@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.dao.QuestionDao">
+    <!--配置实体类属性和数据库表中列的对应关系-->
+    <resultMap id="BaseResultMap" autoMapping="true" type="com.itheima.domain.Question">
+        <id column="id" property="id"/>
+        <result column="company_id" property="companyId"/>
+        <result column="catalog_id" property="catalogId"/>
+        <result column="is_classic" property="isClassic"/>
+        <result column="state" property="state"/>
+        <result column="review_status" property="reviewStatus"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+
+        <association
+            property="company"
+            column="company_id"
+            javaType="com.itheima.domain.Course"
+            select="com.itheima.dao.CompanyDao.findById"/>
+
+        <association
+            property="catalog"
+            column="catalog_id"
+            javaType="com.itheima.domain.Course"
+            select="com.itheima.dao.CatalogDao.findById"
+            />
+
+    </resultMap>
+    
+    <!--配置查询所有，带条件-->
+    <select id="findAll" resultMap="BaseResultMap">
+        select * from st_question order by create_time desc
+    </select>
+
+    <!--配置根据ID查询-->
+    <select id="findById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from st_question where id = #{id}
+    </select>
+
+    <!--配置根据id删除-->
+    <delete id="delete" parameterType="java.lang.String">
+        delete from st_question where id = #{id}
+    </delete>
+
+    <!--配置全字段插入，当某个字段没有值时，插入null-->
+    <insert id="save" parameterType="com.itheima.domain.Question">
+        insert into st_question(id, company_id, catalog_id, remark, subject,picture, analysis, type,
+                difficulty, is_classic, state, review_status, create_time)
+            values (#{id}, #{companyId}, #{catalogId},
+                #{remark}, #{subject}, #{picture}, #{analysis},
+                #{type}, #{difficulty}, #{isClassic},
+                #{state}, '0', now())
+    </insert>
+
+    <!--配置全字段更新，当提供的数据为null时，数据库数据会被更新为null-->
+    <update id="update" parameterType="com.itheima.domain.Question">
+        update
+            st_question
+        set
+            company_id = #{companyId},
+            catalog_id = #{catalogId},
+            remark = #{remark},
+            subject = #{subject},
+            picture = #{picture},
+            analysis = #{analysis},
+            type = #{type},
+            difficulty = #{difficulty},
+            is_classic = #{isClassic},
+            state = #{state}
+        where
+            id = #{id}
+    </update>
+
+</mapper>

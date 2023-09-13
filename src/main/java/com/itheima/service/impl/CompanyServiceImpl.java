@@ -1,10 +1,10 @@
-package com.itheima.service;
+package com.itheima.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.itheima.dao.UserDao;
-import com.itheima.domain.User;
-import com.itheima.utils.MD5Util;
+import com.itheima.dao.CompanyDao;
+import com.itheima.domain.Company;
+import com.itheima.service.CompanyService;
 import com.itheima.utils.MybatisUtil;
 import org.apache.ibatis.session.SqlSession;
 
@@ -15,21 +15,21 @@ import java.util.stream.Stream;
 /**
  * @author xz
  */
-public class UserServiceImpl implements UserService {
+public class CompanyServiceImpl implements CompanyService {
     @Override
-    public PageInfo<User> findByPage(int currPage, int pageSize) {
+    public PageInfo<Company> findByPage(int currPage, int pageSize) {
         SqlSession sqlSession = null;
-        PageInfo<User> info = null;
+        PageInfo<Company> info = null;
         try {
             //1 通过MybatisUtil工厂类获取SqlSession对象
             sqlSession = MybatisUtil.getSqlSession();
             //2 通过MybatisUtil工厂类获取dao接口的代理对象
-            UserDao UserDao = MybatisUtil.getMapper(sqlSession, UserDao.class);
+            CompanyDao companyDao = MybatisUtil.getMapper(sqlSession, CompanyDao.class);
             //3 执行操作释放资源
             //3.1 在查询所有之前设置分页参数
             PageHelper.startPage(currPage, pageSize);
             //3.2 查询所有
-            List<User> list = UserDao.findAll();
+            List<Company> list = companyDao.findAll();
             //3.3 封装分页结果
             info = new PageInfo<>(list);
         } finally {
@@ -40,68 +40,62 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void save(User user) {
+    public void save(Company company) {
         SqlSession sqlSession = null;
         try {
             //1 通过MybatisUtil工厂类获取SqlSession对象
             sqlSession = MybatisUtil.getSqlSession();
             //2 通过MybatisUtil工厂类获取dao接口的代理对象
-            UserDao UserDao = MybatisUtil.getMapper(sqlSession, UserDao.class);
+            CompanyDao companyDao = MybatisUtil.getMapper(sqlSession, CompanyDao.class);
 
-            //生成一个唯一的id，保存到User
-            String id = UUID.randomUUID().toString().replace("-", "");
-            user.setId(id);
-
-            //对密码加密
-            String password = MD5Util.md5(user.getPassword());
-            user.setPassword(password);
+            //生成一个唯一的id，保存到company
+            String id = UUID.randomUUID().toString().replace("-","");
+            company.setId(id);
 
             //3 执行操作
-            UserDao.save(user);
+            companyDao.save(company);
             //4 提交事务
             MybatisUtil.commit(sqlSession);
-        } finally {
+        }finally {
             //释放资源
             MybatisUtil.close(sqlSession);
         }
     }
 
     @Override
-    public User findById(String id) {
+    public Company findById(String id) {
         SqlSession sqlSession = null;
-        User User = null;
+        Company company=null;
         try {
             //1 通过MybatisUtil工厂类获取SqlSession对象
             sqlSession = MybatisUtil.getSqlSession();
             //2 通过MybatisUtil工厂类获取dao接口的代理对象
-            UserDao UserDao = MybatisUtil.getMapper(sqlSession, UserDao.class);
+            CompanyDao companyDao = MybatisUtil.getMapper(sqlSession, CompanyDao.class);
             //3 执行操作释放资源
-            User = UserDao.findById(id);
-        } finally {
+            company= companyDao.findById(id);
+        }finally {
             //释放资源
             MybatisUtil.close(sqlSession);
         }
-        return User;
+        return company;
     }
-
     @Override
-    public void update(User user) {
+    public void update(Company company) {
         SqlSession sqlSession = null;
         try {
             //1 通过MybatisUtil工厂类获取SqlSession对象
             sqlSession = MybatisUtil.getSqlSession();
             //2 通过MybatisUtil工厂类获取dao接口的代理对象
-            UserDao UserDao = MybatisUtil.getMapper(sqlSession, UserDao.class);
+            CompanyDao companyDao = MybatisUtil.getMapper(sqlSession, CompanyDao.class);
             //3 执行操作
-            UserDao.update(user);
+            companyDao.update(company);
             //4 提交事务
             MybatisUtil.commit(sqlSession);
-        } finally {
+        }finally {
             //释放资源
             MybatisUtil.close(sqlSession);
         }
     }
-
     @Override
     public void delete(String[] ids) {
         SqlSession sqlSession = null;
@@ -109,35 +103,29 @@ public class UserServiceImpl implements UserService {
             //1 通过MybatisUtil工厂类获取SqlSession对象
             sqlSession = MybatisUtil.getSqlSession();
             //2 通过MybatisUtil工厂类获取dao接口的代理对象
-            UserDao userDao = MybatisUtil.getMapper(sqlSession, UserDao.class);
+            CompanyDao companyDao = MybatisUtil.getMapper(sqlSession, CompanyDao.class);
             //3 执行操作
-            Stream.of(ids).forEach(
-                    id -> {
-                        //删除关联关系
-                        userDao.deleteRoleAssociationByUserId(id);
-                        userDao.delete(id);
-                    }
-            );
+            Stream.of(ids).forEach(id->companyDao.delete(id));
             //4 提交事务
             MybatisUtil.commit(sqlSession);
-        } finally {
+        }finally {
             //释放资源
             MybatisUtil.close(sqlSession);
         }
     }
 
     @Override
-    public List<User> findAll() {
+    public List<Company> findAll() {
         SqlSession sqlSession = null;
-        List<User> list = null;
+        List<Company> list=null;
         try {
             //1 通过MybatisUtil工厂类获取SqlSession对象
             sqlSession = MybatisUtil.getSqlSession();
             //2 通过MybatisUtil工厂类获取dao接口的代理对象
-            UserDao userDao = MybatisUtil.getMapper(sqlSession, UserDao.class);
+            CompanyDao companyDao = MybatisUtil.getMapper(sqlSession, CompanyDao.class);
             //3 执行操作释放资源
-            list = userDao.findAll();
-        } finally {
+            list=companyDao.findAll();
+        }finally {
             //释放资源
             MybatisUtil.close(sqlSession);
         }

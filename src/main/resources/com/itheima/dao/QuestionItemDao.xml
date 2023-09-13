@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.dao.QuestionItemDao">
+    <!--配置实体类属性和数据库表中列的对应关系-->
+    <resultMap id="BaseResultMap" autoMapping="true" type="com.itheima.domain.QuestionItem">
+        <id column="id" property="id"/>
+        <result column="question_id" property="questionId"/>
+        <result column="is_right" property="isRight"/>
+    </resultMap>
+
+    <!--配置查询所有，带条件-->
+    <select id="findAll" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from st_question_item where question_id=#{questionId}
+    </select>
+
+    <!--配置根据ID查询-->
+    <select id="findById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from st_question_item where id = #{id}
+    </select>
+
+    <!--配置根据id删除-->
+    <delete id="delete" parameterType="java.lang.String">
+        delete from st_question_item where id = #{id}
+    </delete>
+
+    <!--配置全字段插入，当某个字段没有值时，插入null-->
+    <insert id="save" parameterType="com.itheima.domain.QuestionItem">
+        insert into st_question_item values (#{id}, #{questionId}, #{content},#{picture}, #{isRight})
+    </insert>
+
+
+    <!--配置全字段更新，当提供的数据为null时，数据库数据会被更新为null-->
+    <update id="update" parameterType="com.itheima.domain.QuestionItem">
+        update st_question_item
+        set
+        content = #{content},
+        <if test="picture != null and picture.length>0">
+          picture = #{picture},
+        </if>
+        is_right = #{isRight}
+        where id = #{id}
+    </update>
+</mapper>
