@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.dao.RoleDao">
+    <!--配置实体类属性和数据库表中列的对应关系-->
+    <resultMap id="BaseResultMap" type="com.itheima.domain.Role">
+        <id column="role_id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+
+    <!--配置查询的列名公共SQL语句-->
+    <sql id="Base_Column_List">
+        role_id, name, remark, create_time
+    </sql>
+
+    <!--配置查询所有，带条件-->
+    <select id="findAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from ss_role
+    </select>
+
+    <!--配置根据ID查询-->
+    <select id="findById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from ss_role
+        where role_id = #{id}
+    </select>
+
+    <!--配置根据id删除-->
+    <delete id="delete" parameterType="java.lang.String">
+        delete from ss_role where role_id = #{id}
+    </delete>
+
+    <!--配置全字段插入，当某个字段没有值时，插入null-->
+    <insert id="save" parameterType="com.itheima.domain.Role">
+        insert into ss_role (role_id, name, remark, create_time)
+        values (#{id}, #{name}, #{remark},now())
+    </insert>
+
+    <!--配置全字段更新，当提供的数据为null时，数据库数据会被更新为null-->
+    <update id="update" parameterType="com.itheima.domain.Role">
+        update ss_role
+        set name = #{name},
+        remark = #{remark},
+        update_time = now()
+        where role_id = #{id}
+    </update>
+
+    <!-- 根据roleId删除所有关系-->
+    <delete id="deleteModulesByRoleId" parameterType="string">
+  delete from ss_role_module where role_id = #{roleId}
+</delete>
+
+    <!--添加该角色具有的关系-->
+    <insert id="saveModulesByRoleId">
+  insert into ss_role_module values(#{roleId},#{moduleId})
+</insert>
+</mapper>

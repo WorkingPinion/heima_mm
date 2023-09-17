@@ -23,9 +23,9 @@ public class POITest {
         //2 在工作簿中创建工作表，也就是sheet
         Sheet sheet = workbook.createSheet("传智教育");
         //3 在工作表中创建行，也就是row
-        Row row = sheet.createRow(1);
+        Row row = sheet.createRow(10);
         //4 在行中创建列，也叫单元格，也就是cell
-        Cell cell = row.createCell(2);
+        Cell cell = row.createCell(10);
         //5 在单元格中写入数据
         cell.setCellValue("黑马程序员-胡继周-胡花粥");
 

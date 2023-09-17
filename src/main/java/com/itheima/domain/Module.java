@@ -1,7 +1,5 @@
 package com.itheima.domain;
 
-import java.util.List;
-
 public class Module {
     private String id;
     private String parentId; //所属模块id
@@ -12,7 +10,7 @@ public class Module {
     private String remark; //描述
 
     private Module module; //自连接关系,封装父模块信息
-    private List<Module> children; //封装一级菜单对应的二级菜单，也就是保存子模块
+    //private List<Module> children; //封装一级菜单对应的二级菜单，也就是保存子模块
 
     public String getId() {
         return id;
@@ -78,13 +76,13 @@ public class Module {
         this.module = module;
     }
 
-    public List<Module> getChildren() {
-        return children;
-    }
-
-    public void setChildren(List<Module> children) {
-        this.children = children;
-    }
+    //public List<Module> getChildren() {
+    //    return children;
+    //}
+    //
+    //public void setChildren(List<Module> children) {
+    //    this.children = children;
+    //}
 
     @Override
     public String toString() {

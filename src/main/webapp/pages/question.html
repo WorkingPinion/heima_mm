@@ -26,9 +26,11 @@
             position: relative;
             overflow: hidden;
         }
+
         .avatar-uploader .el-upload:hover {
             border-color: #409EFF;
         }
+
         .avatar-uploader-icon {
             font-size: 28px;
             color: #8c939d;
@@ -37,11 +39,13 @@
             line-height: 178px;
             text-align: center;
         }
+
         .avatar {
             width: 178px;
             height: 178px;
             display: block;
         }
+
         input[type="file"] {
             display: none;
         }
@@ -73,10 +77,18 @@
                     <div class="pull-left">
                         <div class="form-group form-inline">
                             <div class="btn-group">
-                                <button type="button" class="btn btn-default" title="新建" @click='handleCreate()'><i class="fa fa-file-o"></i> 新建</button>
-                                <button type="button" class="btn btn-default" title="删除" @click='handleDelete()'><i class="fa fa-trash-o"></i> 删除</button>
-                                <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新</button>
-                                <button type="button" class="btn btn-default" title="导出题目" @click='toExport()'> <i class="fa fa-download"></i>导出题目</button>
+                                <button type="button" class="btn btn-default" title="新建" @click='handleCreate()'><i
+                                        class="fa fa-file-o"></i> 新建
+                                </button>
+                                <button type="button" class="btn btn-default" title="删除" @click='handleDelete()'><i
+                                        class="fa fa-trash-o"></i> 删除
+                                </button>
+                                <button type="button" class="btn btn-default" title="刷新"
+                                        onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新
+                                </button>
+                                <button type="button" class="btn btn-default" title="导出题目" @click='toExport()'><i
+                                        class="fa fa-download"></i>导出题目
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -105,7 +117,8 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="question in dataList" class="odd" onmouseover="this.className='highlight'" onmouseout="this.className='odd'" >
+                        <tr v-for="question in dataList" class="odd" onmouseover="this.className='highlight'"
+                            onmouseout="this.className='odd'">
                             <td><input type="checkbox" v-model="checkedItemIds" :value="question.id"/></td>
                             <td>{{question.company?question.company.name:""}}</td>
                             <td>{{question.catalog?question.catalog.name:""}}</td>
@@ -121,9 +134,14 @@
                             <td v-else-if="question.reviewStatus==0">审核中</td>
                             <td v-else><font color="green">审核通过</font></td>
                             <th class="text-center">
-                                <button type="button" class="btn bg-olive btn-xs" @click='handleUpdate(question.id)'>编辑</button>
-                                <button type="button" class="btn bg-olive btn-xs" @click='handleToQuestionItem(question.id)'>配置选项</button>
-                                <button type="button" class="btn bg-olive btn-xs" @click='handleAudit(question.id)'>审核</button>
+                                <button type="button" class="btn bg-olive btn-xs" @click='handleUpdate(question.id)'>
+                                    编辑
+                                </button>
+                                <button type="button" class="btn bg-olive btn-xs"
+                                        @click='handleToQuestionItem(question.id)'>配置选项
+                                </button>
+                                <button type="button" class="btn bg-olive btn-xs" @click='handleAudit(question.id)'>审核
+                                </button>
                             </th>
                         </tr>
                         </tbody>
@@ -179,12 +197,12 @@
 
                     <div class="col-md-2 title rowHeight2x">题干</div>
                     <div class="col-md-10 data rowHeight2x">
-                        <textarea class="form-control" rows="3"v-model="formData.subject"></textarea>
+                        <textarea class="form-control" rows="3" v-model="formData.subject"></textarea>
                     </div>
 
                     <!--在表单中添加文件上传向-->
-                    <div class="col-md-2 title"  style="height: 200px;line-height: 230px">题干图片</div>
-                    <div class="col-md-10 data"  style="height: 200px">
+                    <div class="col-md-2 title" style="height: 200px;line-height: 230px">题干图片</div>
+                    <div class="col-md-10 data" style="height: 200px">
                         <!--文件上传组件-->
                         <el-upload
                                 class="avatar-uploader"
@@ -206,7 +224,7 @@
 
                     <div class="col-md-2 title">题目类型</div>
                     <div class="col-md-4 data">
-                        <select class="form-control"v-model="formData.type">
+                        <select class="form-control" v-model="formData.type">
                             <option value="1">单选题</option>
                             <option value="2">多选题</option>
                             <option value="3">简答题</option>
@@ -244,7 +262,8 @@
             </div>
             <div class="box-tools text-center">
                 <button type="button" @click="handleAdd()" class="btn bg-maroon">保存</button>
-                <button type="button" class="btn bg-default" @click="resetForm();dialogFormVisible4Add=false">返回</button>
+                <button type="button" class="btn bg-default" @click="resetForm();dialogFormVisible4Add=false">返回
+                </button>
             </div>
         </el-form>
     </el-dialog>
@@ -281,12 +300,12 @@
 
                     <div class="col-md-2 title rowHeight2x">题干</div>
                     <div class="col-md-10 data rowHeight2x">
-                        <textarea class="form-control" rows="3"v-model="formData.subject"></textarea>
+                        <textarea class="form-control" rows="3" v-model="formData.subject"></textarea>
                     </div>
 
                     <!--在表单中添加文件上传向-->
-                    <div class="col-md-2 title"  style="height: 200px;line-height: 230px">题干图片</div>
-                    <div class="col-md-10 data"  style="height: 200px">
+                    <div class="col-md-2 title" style="height: 200px;line-height: 230px">题干图片</div>
+                    <div class="col-md-10 data" style="height: 200px">
                         <!--文件上传组件-->
                         <el-upload
                                 class="avatar-uploader"
@@ -308,7 +327,7 @@
 
                     <div class="col-md-2 title">题目类型</div>
                     <div class="col-md-4 data">
-                        <select class="form-control"v-model="formData.type">
+                        <select class="form-control" v-model="formData.type">
                             <option value="1">单选题</option>
                             <option value="2">多选题</option>
                             <option value="3">简答题</option>
@@ -346,35 +365,36 @@
             </div>
             <div class="box-tools text-center">
                 <button type="button" @click="handleEdit()" class="btn bg-maroon">保存</button>
-                <button type="button" class="btn bg-default" @click="resetForm();dialogFormVisible4Edit=false">返回</button>
+                <button type="button" class="btn bg-default" @click="resetForm();dialogFormVisible4Edit=false">返回
+                </button>
             </div>
         </el-form>
     </el-dialog>
 </div>
 <script>
     new Vue({
-        el:"#frameContent",
-        data:{
-            checkedItemIds:[], //选中的复选框id们
+        el: "#frameContent",
+        data: {
+            checkedItemIds: [], //选中的复选框id们
             dataList: [],//当前页要展示的分页列表数据
-            pagination:{
-                currentPage:1, //当前页数
-                pageSize:5, //每页条数
-                total:100 //总条数
+            pagination: {
+                currentPage: 1, //当前页数
+                pageSize: 5, //每页条数
+                total: 100 //总条数
             },
             formData: {
-                type:"1",
-                difficulty:"1",
-                isClassic:"1",
-                state:"1"
+                type: "1",
+                difficulty: "1",
+                isClassic: "1",
+                state: "1"
             },//表单数据
             imgUrl: null,//上传成功的图片名称
-            companyList:[],//企业列表
-            catalogList:[], //目录列表
+            companyList: [],//企业列表
+            catalogList: [], //目录列表
             dialogFormVisible4Add: false,//增加表单是否可见
-            dialogFormVisible4Edit:false//编辑表单是否可见
+            dialogFormVisible4Edit: false//编辑表单是否可见
         },
-        created(){ //vue对象创建完成的回调函数
+        created() { //vue对象创建完成的回调函数
             this.findByPage()
         },
         methods: {
@@ -396,28 +416,28 @@
                 this.formData = {};
             },
             //新建方法
-            handleCreate(){
-                this.dialogFormVisible4Add=true;
+            handleCreate() {
+                this.dialogFormVisible4Add = true;
                 //发送异步请求，查询所有企业信息
-                axios.get("../store/company/findAll").then(resp=>{
-                    if(resp.data.flag){
+                axios.get("../store/company/findAll").then(resp => {
+                    if (resp.data.flag) {
                         //给企业列表赋值
-                        this.companyList=resp.data.data;
-                    }else{
+                        this.companyList = resp.data.data;
+                    } else {
                         this.$message.error(resp.data.message);
                     }
                 });
                 //发送异步请求，查询所有目录信息
-                axios.get("../store/catalog/findAll").then(resp=>{
-                    if(resp.data.flag){
+                axios.get("../store/catalog/findAll").then(resp => {
+                    if (resp.data.flag) {
                         //给目录/题目类型列表赋值
-                        this.catalogList=resp.data.data;
-                    }else{
+                        this.catalogList = resp.data.data;
+                    } else {
                         this.$message.error(resp.data.message);
                     }
                 });
                 //给imgUrl重置
-                this.imgUrl=null;
+                this.imgUrl = null;
             },
             //保存方法
             handleAdd() {
@@ -435,40 +455,40 @@
                 })
             },
             //修改方法
-            handleUpdate(id){
+            handleUpdate(id) {
                 //重置表单,不需要显示formData默认信息
                 this.resetForm();
                 //给imgUrl重置
-                this.imgUrl=null;
+                this.imgUrl = null;
                 //展示弹出框
-                this.dialogFormVisible4Edit=true;
+                this.dialogFormVisible4Edit = true;
                 //发送异步请求，根据id查询
-                axios.post("../store/question/findById?id="+id).then(resp=>{
-                    if(resp.data.flag){
+                axios.post("../store/question/findById?id=" + id).then(resp => {
+                    if (resp.data.flag) {
                         //展示信息
-                        this.formData=resp.data.data;
+                        this.formData = resp.data.data;
                         //有图片就展示图片
-                        if(this.formData.picture){
-                            this.imgUrl="../upload/"+this.formData.picture;
+                        if (this.formData.picture) {
+                            this.imgUrl = "../upload/" + this.formData.picture;
                         }
-                    }else{
+                    } else {
                         this.$message.error(resp.data.message);
                     }
                 });
-                axios.get("../store/company/findAll").then(resp=>{
-                    if(resp.data.flag){
+                axios.get("../store/company/findAll").then(resp => {
+                    if (resp.data.flag) {
                         //给企业列表赋值
-                        this.companyList=resp.data.data;
-                    }else{
+                        this.companyList = resp.data.data;
+                    } else {
                         this.$message.error(resp.data.message);
                     }
                 });
                 //发送异步请求，查询所有目录信息
-                axios.get("../store/catalog/findAll").then(resp=>{
-                    if(resp.data.flag){
+                axios.get("../store/catalog/findAll").then(resp => {
+                    if (resp.data.flag) {
                         //给目录/题目类型列表赋值
-                        this.catalogList=resp.data.data;
-                    }else{
+                        this.catalogList = resp.data.data;
+                    } else {
                         this.$message.error(resp.data.message);
                     }
                 });
@@ -528,13 +548,13 @@
             //文件上传成功的回调函数
             handleAvatarSuccess(res, file) {
                 //res表示响应回来的结果（图片名称）,file表示前端上传过去的文件对象
-                this.imgUrl="../upload/"+res.data;
+                this.imgUrl = "../upload/" + res.data;
                 //绑定到formData的picture属性中，随着新增和编辑时将图片名称保存到数据库
-                this.formData.picture=res.data;
+                this.formData.picture = res.data;
             },
             //文件上传之前的回调函数,用于校验
             beforeAvatarUpload(file) {
-                const isJPG = (file.type === 'image/jpeg')||(file.type ==='image/png');
+                const isJPG = (file.type === 'image/jpeg') || (file.type === 'image/png');
                 const isLt2M = file.size / 1024 / 1024 < 10;
 
                 if (!isJPG) {
@@ -546,9 +566,13 @@
                 return isJPG && isLt2M;
             },
             //配置选项的方法
-            handleToQuestionItem(id){
-                location.href="questionItem.html?questionId="+id;
+            handleToQuestionItem(id) {
+                location.href = "questionItem.html?questionId=" + id;
             },
+            //题目导出的方法
+            toExport() {
+                location.href = "../store/question/toExport"
+            }
         }
     });
 </script>

@@ -131,7 +131,7 @@
     </section>
 
     <!--添加弹出框-->
-    <el-dialog title="添加企业信息" :visible.sync="dialogFormVisible4Add" @close="resetForm() >
+    <el-dialog title="添加企业信息" :visible.sync="dialogFormVisible4Add" @close="resetForm()">
         <!--
             :model="formData": 关联数据
             :rules: 关联校验规则
@@ -205,7 +205,7 @@
             </div>
             <div class="box-tools text-center">
                 <button type="button" @click="handleAdd()" class="btn bg-maroon">保存</button>
-                <button type="button" class="btn bg-default" dialogFormVisible4Add=false" @close="resetForm()>返回
+                <button type="button" class="btn bg-default" @click="resetForm();dialogFormVisible4Add=false">返回
                 </button>
             </div>
         </el-form>
@@ -357,7 +357,7 @@
                         //展示信息
                         this.formData = resp.data.data;
                         //处理日期回显问题
-                        this.formData.expirationDate = this.formData.expirationDate.split(" ")[0];
+                       // this.formData.expirationDate = this.formData.expirationDate.split(" ")[0];
                     } else {
                         this.$message.error(resp.data.message);
                     }

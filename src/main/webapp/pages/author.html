@@ -28,7 +28,7 @@
 </head>
 
 <body style="overflow: visible;">
-<div id="frameContent" class="content-wrapper" style="margin-left:0px;height: 1200px" >
+<div id="frameContent" class="content-wrapper" style="margin-left:0px;height: 1200px">
     <section class="content-header">
         <h1>菜单管理
             <small>菜单列表</small>
@@ -67,75 +67,92 @@
 </script>
 <script>
     new Vue({
-        el:"#frameContent",
-        data:{
-            role:{},//角色对象
+        el: "#frameContent",
+        data: {
+            role: {},//角色对象
             //以下都是zTree树型控件需要的变量
-            setting : {check: {enable: true},data: {simpleData: {enable: true}}},//树型控件相关设置信息
-            zTreeObj:{}, //树型控件对象
-            /*
-             [
-                {id:1,parentId:0,name:"平台系统管理",ctype:0,state:1,curl:"system",remark:"xxx"},
-                {id:101,parentId:1,name:"部门管理",ctype:1,state:1,curl:"dept.html",remark:"xxx"},
-                {id:102,parentId:1,name:"用户管理",ctype:1,state:1,curl:"user.html",remark:"xxx"},
-             ]
-            */
-            /*zNodes : [ //树型控件初始化数据对象，模拟的假数据，后期需要从数据库中获取
-                {id:1,pId:0,name:'平台系统管理',checked:false},
-                {id:102,pId:1,name:'部门管理',checked:false},
-                {id:103,pId:1,name:'用户管理',checked:false},
-                {id:104,pId:1,name:'角色管理',checked:false},
-                {id:105,pId:1,name:'模块管理',checked:false},
-                {id:106,pId:1,name:'系统日志管理',checked:false},
-                {id:2,pId:0,name:'题库管理',checked:false},
-                {id:201,pId:2,name:'题目学科管理',checked:false},
-                {id:202,pId:2,name:'题目类型管理',checked:false},
-                {id:203,pId:2,name:'题目管理',checked:false},
-                {id:204,pId:2,name:'题目审核日志',checked:false},
-                {id:205,pId:2,name:'企业管理',checked:false},
-                {id:3,pId:0,name:'会员管理',checked:false},
-                {id:301,pId:3,name:'会员账号管理',checked:false},
-                {id:302,pId:3,name:'会员答题管理',checked:false}
-            ]*/
-            zNodes:[]
+            setting: {check: {enable: true}, data: {simpleData: {enable: true}}},//树型控件相关设置信息
+            zTreeObj: {}, //树型控件对象
+            // zNodes: [ //树型控件初始化数据对象，模拟的假数据，后期需要从数据库中获取
+            //     {id: 1, pId: 0, name: '平台系统管理', checked: false},
+            //     {id: 102, pId: 1, name: '部门管理', checked: false},
+            //     {id: 103, pId: 1, name: '用户管理', checked: false},
+            //     {id: 104, pId: 1, name: '角色管理', checked: false},
+            //     {id: 105, pId: 1, name: '模块管理', checked: false},
+            //     {id: 106, pId: 1, name: '系统日志管理', checked: false},
+            //     {id: 2, pId: 0, name: '题库管理', checked: false},
+            //     {id: 201, pId: 2, name: '题目学科管理', checked: false},
+            //     {id: 202, pId: 2, name: '题目类型管理', checked: false},
+            //     {id: 203, pId: 2, name: '题目管理', checked: false},
+            //     {id: 204, pId: 2, name: '题目审核日志', checked: false},
+            //     {id: 205, pId: 2, name: '企业管理', checked: false},
+            //     {id: 3, pId: 0, name: '会员管理', checked: false},
+            //     {id: 301, pId: 3, name: '会员账号管理', checked: false},
+            //     {id: 302, pId: 3, name: '会员答题管理', checked: false}
+            // ]
+            zNodes: []
         },
-        created(){
+        created() {
             //不适合初始化树型控件，时间早了，所以在mounted()方法中做。
         },
-        mounted(){
+        mounted() {
             //根据roleId查询角色信息
             this.findRole();
+            // this. initZTree();
             //调用初始化树型控件方法
             this.initZTreeData();
-
         },
-        methods:{
+        methods: {
             //获取角色信息的方法
-            findRole(){
-
+            findRole() {
+                axios.get("../system/role/findById?id=" + roleId).then(resp => {
+                    if (resp.data.flag) {
+                        //展示信息
+                        this.role = resp.data.data;
+                    } else {
+                        this.$message.error(resp.data.message);
+                    }
+                });
             },
             //初始化树型控件方法
-            initZTreeData(){
-
+            initZTreeData() {
+                axios.get("../system/module/findModulesByRoleId?roleId=" + roleId).then(resp => {
+                    if (resp.data.flag) {
+                        //响应回来的数据应该和模拟的数据格式一致
+                        this.zNodes = resp.data.data;
+                        //查到数据之后调用初始化树型控件,删除之前mounted()中调用this.initZTree();方法
+                        this.initZTree();
+                    } else {
+                        this.$message.error(resp.data.message);
+                    }
+                })
             },
             //初始化zTree树型控件的方法
-            initZTree(){
+            initZTree() {
                 this.zTreeObj = $.fn.zTree.init($("#treeDemo"), this.setting, this.zNodes)
                 let zTree = $.fn.zTree.getZTreeObj("treeDemo");
-                zTree.setting.check.chkboxType = { "Y" : "ps", "N" : "ps" };
+                zTree.setting.check.chkboxType = {"Y": "ps", "N": "ps"};
                 this.zTreeObj.expandAll(true);//true：展开所有
             },
             //保存事件调用的方法：保存角色的权限
-            submitCheckedNodes(){
-                //1 获取勾选的所有模块的id值，保存到数组中
-                //1.1 获取所有的勾选权限节点
+            submitCheckedNodes() {
+                //1.获取所有的勾选权限节点
                 var nodes = this.zTreeObj.getCheckedNodes(true);//true:被勾选，false：未被勾选
-                //2.2 循环nodes，获取每个节点的id，并将数据加入moduleIds数组
+                //2.循环nodes，获取每个节点的id，并将数据加入moduleIds数组
                 var moduleIds = [];
-                for(var i=0;i<nodes.length;i++) {
+                for (var i = 0; i < nodes.length; i++) {
                     moduleIds.push(nodes[i].id);
                 }
-                //2.发送异步请求,将roleId和moduleIds数组发送给服务器
+
+                //3.发送异步请求,将roleId和moduleIds数组发送给服务器
+                axios.post("../system/role/updateRoleAndModules?roleId="+roleId, moduleIds).then(resp => {
+                    if (resp.data.flag) {
+                        //跳转到角色页面
+                        location.href = "role.html"
+                    } else {
+                        this.$message.error(resp.data.message);
+                    }
+                })
             }
         }
     });

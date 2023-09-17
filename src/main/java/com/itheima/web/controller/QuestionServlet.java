@@ -185,5 +185,23 @@ public class QuestionServlet extends BaseServlet {
         }
 
     }
+    /**
+     * 处理导出题目请求
+     * @param request
+     * @param response
+     */
+    private Result toExport(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            //1 设置content-disposition响应头，告诉浏览器以附件(文件下载)的方式弹框
+            response.setHeader("content-disposition","attachment;filename=question.xlsx");
+            //2 调用service层方法，生成xlsx表格，进行输出
+            questionService.toExport(response.getOutputStream());
+            //响应结果
+            return new Result(true,MessageConstant.QUESTION_EXPORT_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,MessageConstant.QUESTION_EXPORT_FAIL);
+        }
+    }
 
 }

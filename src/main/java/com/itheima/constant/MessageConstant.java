@@ -91,8 +91,11 @@ public final class MessageConstant {
     public static final String EDIT_ROLE_FAIL="编辑角色失败";
     public static final String DELETE_ROLE_SUCCESS="删除角色成功";
     public static final String DELETE_ROLE_FAIL="删除角色失败";
+    public static final String QUERY_AUTHORLIST_SUCCESS="查询角色权限列表成功";
+    public static final String QUERY_AUTHORLIST_FAILE="查询角色权限列表失败";
     public static final String SETTING_ROLE_AUTHORIZE_SUCCESS="给角色授权成功";
     public static final String SETTING_ROLE_AUTHORIZE_FAIL="给角色授权失败";
+
 
     //菜单/功能 模块
     public static final String QUERY_MODULE_SUCCESS="查询模块成功";
@@ -104,11 +107,14 @@ public final class MessageConstant {
     public static final String DELETE_MODULE_SUCCESS="删除模块成功";
     public static final String DELETE_MODULE_FAIL="删除模块失败";
 
+
+
     //其他
     public static final String LOAD_ZTREE_SUCCESS="加载树型菜单成功";
     public static final String LOAD_ZTREE_FAIL="加载树型菜单失败";
     public static final String PERMISSION_FORBIDDEN="权限不足";
-    public static final String QUERY_PERMISSIONLIST_SUCCESS="查询权限列表成功";
-    public static final String QUERY_PERMISSIONLIST_FAILE="查询权限列表失败";
+
+
+
 }
 
