@@ -51,4 +51,21 @@ public interface ModuleDao {
      * @return
      */
     List<Map<String, Object>> findModulesByRoleId(String roleId);
+
+    /**
+     * 根据用户id动态查询用户的菜单
+     */
+    List<Module> findMenuByUserId(String userId);
+    /**
+     * 根据模块id动态查询子菜单
+     */
+    List<Module> findModuleByParentId(String moduleId);
+
+
+    /**
+     * 查询用户具有的操作权限
+     * @param userId
+     * @return
+     */
+    List<String> findPermissionByUserId(String userId);
 }

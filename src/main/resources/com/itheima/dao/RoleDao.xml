@@ -59,4 +59,9 @@
     <insert id="saveModulesByRoleId">
   insert into ss_role_module values(#{roleId},#{moduleId})
 </insert>
+
+    <!--查询用户绑定的角色id们 String[] findRoleIdsByUserId(String userId);-->
+    <select id="findRoleIdsByUserId" resultType="java.lang.String">
+  select role_id from ss_role_user where user_id=#{userId}
+</select>
 </mapper>

@@ -57,5 +57,10 @@ public interface RoleDao {
      */
     void saveModulesByRoleId(@Param("roleId") String roleId, @Param("moduleId") String moduleId);
 
-
+    /**
+     * 查询用户绑定的角色id们
+     * @param userId
+     * @return
+     */
+    String[] findRoleIdsByUserId(String userId);
 }

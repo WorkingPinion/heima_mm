@@ -51,4 +51,10 @@ public interface RoleService {
     void updateRoleAndModules(String roleId, String[] moduleIds);
 
 
+    /**
+     * 查询用户绑定的角色id们
+     * @param userId
+     * @return
+     */
+    String[] findRoleIdsByUserId(String userId);
 }

@@ -144,4 +144,58 @@ public class UserServiceImpl implements UserService {
         }
         return list;
     }
+
+    /**
+     * 根据用户绑定的角色也叫给用户授权
+     * @param userId
+     * @param checkedRoleIds
+     */
+    @Override
+    public void updateUserAndRoles(String userId, String[] checkedRoleIds) {
+        SqlSession sqlSession=null;
+        try {
+            //1 获取SqlSession对象
+            sqlSession = MybatisUtil.getSqlSession();
+            //2 获取dao对应的代理对象
+            UserDao userDao = MybatisUtil.getMapper(sqlSession, UserDao.class);
+            //3 执行操作
+            //3.1 根据用户id删除绑定的角色，操作ss_role_user
+            userDao.deleteUserAndRoles(userId);
+            //3.2 遍历checkedRoleIds，保存用户绑定的角色，操作ss_role_user
+            Stream.of(checkedRoleIds).forEach(roleId->{
+                userDao.saveUserAndRoles(userId,roleId);
+            });
+            //4 提交事务
+            MybatisUtil.commit(sqlSession);
+        } finally {
+            //4 释放资源
+            MybatisUtil.close(sqlSession);
+        }
+    }
+
+    /**
+     * 用户登录
+     * @param email
+     * @param password
+     * @return
+     */
+    @Override
+    public User login(String email, String password) {
+        SqlSession sqlSession = null;
+        User user=null;
+        try {
+            //1 通过MybatisUtil工厂类获取SqlSession对象
+            sqlSession = MybatisUtil.getSqlSession();
+            //2 通过MybatisUtil工厂类获取dao接口的代理对象
+            UserDao userDao = MybatisUtil.getMapper(sqlSession, UserDao.class);
+            //对密码进行加密
+            password=MD5Util.md5(password);
+            //3 执行操作释放资源
+            user= userDao.findByEmailAndPassword(email,password);
+        }finally {
+            //释放资源
+            MybatisUtil.close(sqlSession);
+        }
+        return user;
+    }
 }

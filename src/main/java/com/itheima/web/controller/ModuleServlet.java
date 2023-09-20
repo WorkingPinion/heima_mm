@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.itheima.constant.MessageConstant;
 import com.itheima.domain.Module;
 import com.itheima.domain.Result;
+import com.itheima.domain.User;
 import com.itheima.service.ModuleService;
 import com.itheima.utils.BeanFactory;
 import com.itheima.utils.BeanUtil;
@@ -174,10 +175,39 @@ public class ModuleServlet extends BaseServlet {
             //2 调用service，根据id查询信息
             List<Map<String,Object>> list=moduleService.findModulesByRoleId(roleId);
             //3 响应结果到客户端
-            return new Result(true,MessageConstant.QUERY_AUTHORLIST_SUCCESS,list);
+            return new Result(true,MessageConstant.LOAD_ZTREE_SUCCESS,list);
         } catch (Exception e) {
             e.printStackTrace();
-            return new Result(false,MessageConstant.QUERY_AUTHORLIST_FAILE);
+            return new Result(false,MessageConstant.LOAD_ZTREE_FAIL);
+        }
+    }
+
+    /**
+     * 查询登录的用户拥有的菜单列表
+     */
+    private Result findMenu(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            //1 获取session域中的用户对象
+            User user = (User) request.getSession().getAttribute("user");
+            //2 调用service，获取该用户具有的菜单列表
+            List<Module> list=moduleService.findMenu(user.getId());
+            return new Result(true, MessageConstant.QUERY_MENU_SUCCESS,list);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, MessageConstant.QUERY_MENU_FAIL);
+        }
+    }
+    /**
+     * 查询用户的权利列表
+     */
+    private Result findPermissionList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            //获取权限列表
+            List<String> curls= (List<String>) request.getSession().getAttribute("curls");
+            return new Result(true, MessageConstant.QUERY_PERMISSIONLIST_SUCCESS,curls);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, MessageConstant.QUERY_PERMISSIONLIST_FAILE);
         }
     }
 }

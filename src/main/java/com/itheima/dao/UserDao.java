@@ -1,6 +1,7 @@
 package com.itheima.dao;
 
 import com.itheima.domain.User;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -49,4 +50,25 @@ public interface UserDao {
      * @param id 用户id
      */
     void deleteRoleAssociationByUserId(String id);
+
+    /**
+     * 根据用户id删除绑定的角色，操作ss_role_user
+     * @param userId
+     */
+    void deleteUserAndRoles(String userId);
+
+    /**
+     * 保存用户绑定的角色，操作ss_role_user
+     * @param userId
+     * @param roleId
+     */
+    void saveUserAndRoles(@Param("userId") String userId, @Param("roleId") String roleId);
+
+    /**
+     * 根据邮箱和密码查询用户信息
+     * @param email
+     * @param password
+     * @return
+     */
+    User findByEmailAndPassword(@Param("email") String email, @Param("password") String password);
 }

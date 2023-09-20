@@ -50,14 +50,14 @@ public class ModuleServiceImpl implements ModuleService {
             ModuleDao moduleDao = MybatisUtil.getMapper(sqlSession, ModuleDao.class);
 
             //生成一个唯一的id，保存到module
-            String id = UUID.randomUUID().toString().replace("-","");
+            String id = UUID.randomUUID().toString().replace("-", "");
             module.setId(id);
 
             //3 执行操作
             moduleDao.save(module);
             //4 提交事务
             MybatisUtil.commit(sqlSession);
-        }finally {
+        } finally {
             //释放资源
             MybatisUtil.close(sqlSession);
         }
@@ -66,20 +66,21 @@ public class ModuleServiceImpl implements ModuleService {
     @Override
     public Module findById(String id) {
         SqlSession sqlSession = null;
-        Module module=null;
+        Module module = null;
         try {
             //1 通过MybatisUtil工厂类获取SqlSession对象
             sqlSession = MybatisUtil.getSqlSession();
             //2 通过MybatisUtil工厂类获取dao接口的代理对象
             ModuleDao moduleDao = MybatisUtil.getMapper(sqlSession, ModuleDao.class);
             //3 执行操作释放资源
-            module= moduleDao.findById(id);
-        }finally {
+            module = moduleDao.findById(id);
+        } finally {
             //释放资源
             MybatisUtil.close(sqlSession);
         }
         return module;
     }
+
     @Override
     public void update(Module module) {
         SqlSession sqlSession = null;
@@ -92,11 +93,12 @@ public class ModuleServiceImpl implements ModuleService {
             moduleDao.update(module);
             //4 提交事务
             MybatisUtil.commit(sqlSession);
-        }finally {
+        } finally {
             //释放资源
             MybatisUtil.close(sqlSession);
         }
     }
+
     @Override
     public void delete(String[] ids) {
         SqlSession sqlSession = null;
@@ -106,10 +108,10 @@ public class ModuleServiceImpl implements ModuleService {
             //2 通过MybatisUtil工厂类获取dao接口的代理对象
             ModuleDao moduleDao = MybatisUtil.getMapper(sqlSession, ModuleDao.class);
             //3 执行操作
-            Stream.of(ids).forEach(id->moduleDao.delete(id));
+            Stream.of(ids).forEach(id -> moduleDao.delete(id));
             //4 提交事务
             MybatisUtil.commit(sqlSession);
-        }finally {
+        } finally {
             //释放资源
             MybatisUtil.close(sqlSession);
         }
@@ -118,15 +120,15 @@ public class ModuleServiceImpl implements ModuleService {
     @Override
     public List<Module> findAll() {
         SqlSession sqlSession = null;
-        List<Module> list=null;
+        List<Module> list = null;
         try {
             //1 通过MybatisUtil工厂类获取SqlSession对象
             sqlSession = MybatisUtil.getSqlSession();
             //2 通过MybatisUtil工厂类获取dao接口的代理对象
             ModuleDao moduleDao = MybatisUtil.getMapper(sqlSession, ModuleDao.class);
             //3 执行操作释放资源
-            list=moduleDao.findAll();
-        }finally {
+            list = moduleDao.findAll();
+        } finally {
             //释放资源
             MybatisUtil.close(sqlSession);
         }
@@ -135,16 +137,17 @@ public class ModuleServiceImpl implements ModuleService {
 
     /**
      * 根据角色id初始化属性控件
+     *
      * @param roleId
      * @return
      */
     @Override
     public List<Map<String, Object>> findModulesByRoleId(String roleId) {
         List<Map<String, Object>> list = null;
-        SqlSession sqlSession=null;
+        SqlSession sqlSession = null;
         try {
             //1 获取SqlSession对象
-            sqlSession= MybatisUtil.getSqlSession();
+            sqlSession = MybatisUtil.getSqlSession();
             //2 获取dao对应的代理对象
             ModuleDao moduleDao = MybatisUtil.getMapper(sqlSession, ModuleDao.class);
             //3 执行操作
@@ -152,10 +155,58 @@ public class ModuleServiceImpl implements ModuleService {
             list = moduleDao.findModulesByRoleId(roleId);
             //4 返回结果并释放资源
             MybatisUtil.commit(sqlSession);
-        }finally {
+        } finally {
             //释放资源
             MybatisUtil.close(sqlSession);
         }
         return list;
+    }
+
+    /**
+     * 根据用户id动态查询用户的菜单
+     */
+    @Override
+    public List<Module> findMenu(String userId) {
+        List<Module> list = null;
+        SqlSession sqlSession = null;
+        Module module = new Module();
+        System.out.println(module);
+        try {
+            //1 获取SqlSession对象
+            sqlSession = MybatisUtil.getSqlSession();
+            //2 获取dao对应的代理对象
+            ModuleDao moduleDao = MybatisUtil.getMapper(sqlSession, ModuleDao.class);
+            //3 执行操作，集合中包含了一级菜单和二级菜单。
+            list = moduleDao.findMenuByUserId(userId);
+
+            MybatisUtil.commit(sqlSession);
+        } finally {
+            //释放资源
+            MybatisUtil.close(sqlSession);
+        }
+        return list;
+    }
+
+    /**
+     * 查询用户具有的操作权限
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<String> findPermissionByUserId(String userId) {
+        SqlSession sqlSession = null;
+        List<String> curls=null;
+        try {
+            //1 通过MybatisUtil工厂类获取SqlSession对象
+            sqlSession = MybatisUtil.getSqlSession();
+            //2 通过MybatisUtil工厂类获取dao接口的代理对象
+            ModuleDao moduleDao = MybatisUtil.getMapper(sqlSession, ModuleDao.class);
+            //3 执行操作释放资源
+            curls=moduleDao.findPermissionByUserId(userId);
+        }finally {
+            //释放资源
+            MybatisUtil.close(sqlSession);
+        }
+        return curls;
     }
 }

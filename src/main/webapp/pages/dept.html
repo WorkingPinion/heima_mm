@@ -49,9 +49,17 @@
                     <div class="pull-left">
                         <div class="form-group form-inline">
                             <div class="btn-group">
-                                <button type="button" class="btn btn-default" title="新建" @click='handleCreate()'><i class="fa fa-file-o"></i> 新建</button>
-                                <button type="button" class="btn btn-default" title="删除" @click='handleDelete()'><i class="fa fa-trash-o"></i> 删除</button>
-                                <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新</button>
+                                <button type="button" v-if="permissionList.includes('/system/dept/save')"
+                                        class="btn btn-default" title="新建" @click='handleCreate()'><i
+                                        class="fa fa-file-o"></i> 新建
+                                </button>
+                                <button type="button" v-if="permissionList.includes('/system/dept/delete')"
+                                        class="btn btn-default" title="删除" @click='handleDelete()'><i
+                                        class="fa fa-trash-o"></i> 删除
+                                </button>
+                                <button type="button" class="btn btn-default" title="刷新"
+                                        onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -64,24 +72,26 @@
                     <!--数据列表-->
                     <table class="table table-bordered table-striped table-hover dataTable">
                         <thead>
-                            <tr>
-                                <th class="" style="padding-right:0px;"></th>
-                                <th class="sorting">部门名称</th>
-                                <th class="sorting">所属部门</th>
-                                <th class="sorting">状态</th>
-                                <th class="text-center">操作</th>
-                            </tr>
+                        <tr>
+                            <th class="" style="padding-right:0px;"></th>
+                            <th class="sorting">部门名称</th>
+                            <th class="sorting">所属部门</th>
+                            <th class="sorting">状态</th>
+                            <th class="text-center" v-if="permissionList.includes('/system/dept/edit')">操作</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="dept in dataList">
-                                <td><input type="checkbox" v-model="checkedItemIds" :value="dept.id"/></td>
-                                <td>{{dept.deptName}}</td>
-                                <td>{{dept.parent?dept.parent.deptName:""}}</td>
-                                <td>{{dept.state ==0?'未启用':'使用中'}}</td>
-                                <th class="text-center">
-                                    <button type="button" class="btn bg-olive btn-xs" @click='handleUpdate(dept.id)'>编辑</button>
-                                </th>
-                            </tr>
+                        <tr v-for="dept in dataList">
+                            <td><input type="checkbox" v-model="checkedItemIds" :value="dept.id"/></td>
+                            <td>{{dept.deptName}}</td>
+                            <td>{{dept.parent?dept.parent.deptName:""}}</td>
+                            <td>{{dept.state ==0?'未启用':'使用中'}}</td>
+                            <th class="text-center">
+                                <button v-if="permissionList.includes('/system/dept/edit')" type="button"
+                                        class="btn bg-olive btn-xs" @click='handleUpdate(dept.id)'>编辑
+                                </button>
+                            </th>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -133,14 +143,17 @@
                     <div class="col-md-2 title">状态</div>
                     <div class="col-md-10 data">
                         <div class="form-group form-inline">
-                            <div class="radio"><label><input type="radio" v-model="formData.state" value="0">停用</label></div>
-                            <div class="radio"><label><input type="radio" v-model="formData.state" value="1">启用</label></div>
+                            <div class="radio"><label><input type="radio" v-model="formData.state" value="0">停用</label>
+                            </div>
+                            <div class="radio"><label><input type="radio" v-model="formData.state" value="1">启用</label>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="box-tools text-center">
                     <button type="button" @click="handleAdd()" class="btn bg-maroon">保存</button>
-                    <button type="button" class="btn bg-default" @click="resetForm();dialogFormVisible4Add=false">返回</button>
+                    <button type="button" class="btn bg-default" @click="resetForm();dialogFormVisible4Add=false">返回
+                    </button>
                 </div>
             </div>
         </el-form>
@@ -169,14 +182,17 @@
                     <div class="col-md-2 title">状态</div>
                     <div class="col-md-10 data">
                         <div class="form-group form-inline">
-                            <div class="radio"><label><input type="radio" v-model="formData.state" value="0">停用</label></div>
-                            <div class="radio"><label><input type="radio" v-model="formData.state" value="1">启用</label></div>
+                            <div class="radio"><label><input type="radio" v-model="formData.state" value="0">停用</label>
+                            </div>
+                            <div class="radio"><label><input type="radio" v-model="formData.state" value="1">启用</label>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="box-tools text-center">
                     <button type="button" @click="handleEdit()" class="btn bg-maroon">保存</button>
-                    <button type="button" class="btn bg-default" @click="resetForm();dialogFormVisible4Edit=false">返回</button>
+                    <button type="button" class="btn bg-default" @click="resetForm();dialogFormVisible4Edit=false">返回
+                    </button>
                 </div>
             </div>
         </el-form>
@@ -185,24 +201,40 @@
 
 <script>
     new Vue({
-        el:"#frameContent",
-        data:{
-            checkedItemIds:[], //选中的复选框id们
+        el: "#frameContent",
+        data: {
+            checkedItemIds: [], //选中的复选框id们
             dataList: [],//当前页要展示的分页列表数据
-            deptList:[], //dialog对话框中要展示的部门列表
-            pagination:{
-                currentPage:1, //当前页数
-                pageSize:5, //每页条数
-                total:100 //总条数
+            deptList: [], //dialog对话框中要展示的部门列表
+            pagination: {
+                currentPage: 1, //当前页数
+                pageSize: 5, //每页条数
+                total: 100 //总条数
             },
             formData: {},//表单数据
             dialogFormVisible4Add: false,//增加表单是否可见
-            dialogFormVisible4Edit:false//编辑表单是否可见
+            dialogFormVisible4Edit: false,//编辑表单是否可见
+            permissionList: [] //表示权限列表，控制功能按钮是否加载
         },
-        created(){ //vue对象创建完成的回调函数
-            this.findByPage()
+        created() { //vue对象创建完成的回调函数
+            this.findByPage(),
+            //查询用户的权限列表，能操作哪些功能的路径
+            this.findPermissionList();
         },
         methods: {
+            //查询权限列表
+            findPermissionList() {
+                // 查询用户的权限列表，能操作哪些功能的路径
+                axios.get("../system/module/findPermissionList").then(resp => {
+                    if (resp.data.flag) {
+                        //保存权限列表
+                        this.permissionList = resp.data.data;
+                        console.log(this.permissionList);
+                    } else {
+                        this.$message.error(resp.data.message);
+                    }
+                })
+            },
             //分页查询方法
             findByPage() {
                 axios.get("../system/dept/findByPage", {params: this.pagination}).then((resp) => {
@@ -221,14 +253,14 @@
                 this.formData = {};
             },
             //新建方法
-            handleCreate(){
-                this.dialogFormVisible4Add=true;
+            handleCreate() {
+                this.dialogFormVisible4Add = true;
                 //查询所有部门信息
-                axios.get("../system/dept/findAll").then(resp=>{
-                    if(resp.data.flag){
+                axios.get("../system/dept/findAll").then(resp => {
+                    if (resp.data.flag) {
                         //展示所有数据
-                        this.deptList=resp.data.data;
-                    }else{
+                        this.deptList = resp.data.data;
+                    } else {
                         this.$message.error(resp.data.message);
                     }
                 })
@@ -264,11 +296,11 @@
                     }
                 });
                 //查询所有部门信息
-                axios.get("../system/dept/findAll").then(resp=>{
-                    if(resp.data.flag){
+                axios.get("../system/dept/findAll").then(resp => {
+                    if (resp.data.flag) {
                         //展示所有数据
-                        this.deptList=resp.data.data;
-                    }else{
+                        this.deptList = resp.data.data;
+                    } else {
                         this.$message.error(resp.data.message);
                     }
                 })

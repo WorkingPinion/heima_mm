@@ -42,4 +42,19 @@ public interface UserService {
      * @return 数据集合
      */
     List<User> findAll();
+
+    /**
+     * 更新用户绑定的角色
+     * @param userId
+     * @param roleIds
+     */
+    void updateUserAndRoles(String userId, String[] roleIds);
+
+    /**
+     * 用户登录
+     * @param email
+     * @param password
+     * @return
+     */
+    User login(String email, String password);
 }

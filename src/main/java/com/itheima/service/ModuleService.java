@@ -50,4 +50,16 @@ public interface ModuleService {
      * @return
      */
     List<Map<String, Object>> findModulesByRoleId(String roleId);
+
+    /**
+     * 根据用户id动态查询用户的菜单
+     */
+    List<Module> findMenu(String userId);
+
+    /**
+     * 查询用户具有的操作权限
+     * @param userId
+     * @return
+     */
+    List<String> findPermissionByUserId(String userId);
 }

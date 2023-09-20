@@ -161,4 +161,27 @@ public class RoleServiceImpl implements RoleService {
 
     }
 
+    /**
+     * 查询用户绑定的角色id们
+     * @param userId
+     * @return
+     */
+    @Override
+    public String[] findRoleIdsByUserId(String userId) {
+        SqlSession sqlSession = null;
+        String[] checkedRoleIds=null;
+        try {
+            //1 通过MybatisUtil工厂类获取SqlSession对象
+            sqlSession = MybatisUtil.getSqlSession();
+            //2 通过MybatisUtil工厂类获取dao接口的代理对象
+            RoleDao roleDao = MybatisUtil.getMapper(sqlSession, RoleDao.class);
+            //3 执行操作释放资源
+            checkedRoleIds= roleDao.findRoleIdsByUserId(userId);
+        }finally {
+            //释放资源
+            MybatisUtil.close(sqlSession);
+        }
+        return checkedRoleIds;
+    }
+
 }

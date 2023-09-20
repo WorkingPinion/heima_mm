@@ -168,5 +168,40 @@ public class UserServlet extends BaseServlet {
             return new Result(false, MessageConstant.DELETE_USER_FAIL);
         }
     }
+
+    /**
+     * 根据用户id跟新角色，也叫给用户授权
+     * @param request
+     * @param response
+     */
+    private Result updateUserAndRoles(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            //1 获取请求参数 userId 和checkedRoleIds
+            String userId = request.getParameter("userId");
+            String[] checkedRoleIds = BeanUtil.fillBeanFromJson(request, String[].class);
+            //2 调用service，根据用户绑定的角色也叫给用户授权
+            userService.updateUserAndRoles(userId,checkedRoleIds);
+            //3 响应结果到客户端
+            return new Result(true,MessageConstant.SETTING_USER_AUTHORIZE_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,MessageConstant.SETTING_USER_AUTHORIZE_FAIL);
+        }
+    }
+
+    /**
+     * 查询登录的用户信息
+     */
+    private Result findLoginUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            //1 获取session域中的用户对象
+            Object user = request.getSession().getAttribute("user");
+            //2 对客户的作出响应
+            return new Result(true, MessageConstant.QUERY_USER_SUCCESS,user);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, MessageConstant.QUERY_USER_FAIL);
+        }
+    }
 }
 

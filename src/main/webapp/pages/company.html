@@ -52,9 +52,11 @@
                     <div class="pull-left">
                         <div class="form-group form-inline">
                             <div class="btn-group">
-                                <button type="button" class="btn btn-default" title="新建" @click='handleCreate()'>新建
+                                <button type="button" v-if="permissionList.includes('/store/company/save')"
+                                        class="btn btn-default" title="新建" @click='handleCreate()'>新建
                                 </button>
-                                <button type="button" class="btn btn-default" title="删除" @click='handleDelete()'> 删除
+                                <button type="button" v-if="permissionList.includes('/store/company/delete')"
+                                        class="btn btn-default" title="删除" @click='handleDelete()'> 删除
                                 </button>
                                 <button type="button" class="btn btn-default" title="刷新"
                                         onclick="window.location.reload();"> 刷新
@@ -82,7 +84,7 @@
                             <th class="sorting">联系方式</th>
                             <th class="sorting">所属行业</th>
                             <th class="sorting">状态</th>
-                            <th class="text-center">操作</th>
+                            <th class="text-center" v-if="permissionList.includes('/store/company/edit')">操作</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -96,7 +98,7 @@
                             <td>{{company.industry}}</td>
                             <td>{{company.state ==0?'未审核':'已审核'}}</td>
                             <td class="text-center">
-                                <button type="button" class="btn bg-olive btn-xs" @click='handleUpdate(company.id)'>编辑
+                                <button type="button" v-if="permissionList.includes('/store/company/edit')" class="btn bg-olive btn-xs" @click='handleUpdate(company.id)'>编辑
                                 </button>
                             </td>
                         </tr>
@@ -305,12 +307,28 @@
             },
             formData: {},//表单数据
             dialogFormVisible4Add: false,//增加表单是否可见
-            dialogFormVisible4Edit: false//编辑表单是否可见
+            dialogFormVisible4Edit: false,//编辑表单是否可见
+            permissionList: [] //表示权限列表，控制功能按钮是否加载
         },
         created() { //vue对象创建完成的回调函数
             this.findByPage()
+            //查询用户的权限列表，能操作哪些功能的路径
+            this.findPermissionList();
         },
         methods: {
+            //查询权限列表
+            findPermissionList() {
+                // 查询用户的权限列表，能操作哪些功能的路径
+                axios.get("../system/module/findPermissionList").then(resp => {
+                    if (resp.data.flag) {
+                        //保存权限列表
+                        this.permissionList = resp.data.data;
+                        console.log(this.permissionList);
+                    } else {
+                        this.$message.error(resp.data.message);
+                    }
+                })
+            },
             //分页查询方法
             findByPage() {
                 axios.get("../store/company/findByPage", {params: this.pagination}).then((resp) => {
@@ -357,7 +375,7 @@
                         //展示信息
                         this.formData = resp.data.data;
                         //处理日期回显问题
-                       // this.formData.expirationDate = this.formData.expirationDate.split(" ")[0];
+                        // this.formData.expirationDate = this.formData.expirationDate.split(" ")[0];
                     } else {
                         this.$message.error(resp.data.message);
                     }

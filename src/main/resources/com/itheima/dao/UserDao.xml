@@ -71,4 +71,20 @@
     <delete id="deleteRoleAssociationByUserId">
   delete from ss_role_user where user_id=#{id}
 </delete>
+
+    <!--根据用户id删除绑定的角色，操作ss_role_user void deleteUserAndRoles(String userId);-->
+    <delete id="deleteUserAndRoles">
+  delete from ss_role_user where user_id=#{userId}
+</delete>
+    <!--保存用户绑定的角色，操作ss_role_user
+        void saveUserAndRoles(@Param("userId") String userId, @Param("roleId") String roleId);-->
+    <insert id="saveUserAndRoles" parameterType="java.util.Map">
+  insert into ss_role_user values(#{userId},#{roleId})
+</insert>
+
+    <select id="findByEmailAndPassword" resultMap="BaseResultMap">
+  select user_id, email, user_name,  password, state, gender,
+	telephone, birthday, join_date, dept_id
+  from ss_user where email=#{email} and password=#{password}
+</select>
 </mapper>

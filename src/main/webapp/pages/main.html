@@ -250,14 +250,14 @@
                         <!--用户名-->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <img src="../img/user2-160x160.jpg" class="user-image" alt="User Image">
-                            <span class="hidden-xs">张益达</span>
+                            <span class="hidden-xs">{{user.userName}}</span>
                         </a>
                         <!--弹框-->
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
                                 <img src="../img/user2-160x160.jpg" class="img-circle" alt="User Image">
-                                <p>张益达</p>
+                                <p>{{user.userName}}</p>
                             </li>
                             <!-- Menu Footer-->
                             <li class="user-footer">
@@ -265,7 +265,7 @@
                                     <a href="#" class="btn btn-default btn-flat">修改密码</a>
                                 </div>
                                 <div class="pull-right">
-                                    <a href="/logout.do" class="btn btn-default btn-flat">注销</a>
+                                    <a href="../authentication/logout" class="btn btn-default btn-flat">注销</a>
                                 </div>
                             </li>
                         </ul>
@@ -285,8 +285,8 @@
                     <img src="../img/user2-160x160.jpg" class="img-circle" alt="User Image">
                 </div>
                 <div class="pull-left info">
-                    <p> 张益达</p>
-                    <a href="#">人事行政部</a>
+                    <p> {{user.userName}}</p>
+                    <a href="#">{{user.dept?user.dept.deptName:""}}</a>
                 </div>
             </div>
 
@@ -355,129 +355,162 @@
 <script src="../plugins/bootstrap-markdown/js/bootstrap-markdown.js"></script>
 <script src="../plugins/input-mask/jquery.inputmask.js"></script>
 <script src="../plugins/flot/jquery.flot.min.js"></script>
+
 <script>
     new Vue({
         el:"#app",
         data:{
-            menuList:[
-                {
-                    id: 1,
-                    parentId: 0, //所属模块id,一级菜单的父模块id为0
-                    name: "平台系统管理", //模块名称
-                    ctype: 0, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
-                    curl:"system", //请求url路径,一级菜单没有访问路径（用于权限校验）
-                    children: [
-                        {
-                            id: 101,
-                            parentId: 1, //所属模块id,一级菜单的父模块id为0
-                            name: "部门管理", //模块名称
-                            ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
-                            curl:"dept.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
-                        },
-                        {
-                            id: 102,
-                            parentId: 1, //所属模块id,一级菜单的父模块id为0
-                            name: "用户管理", //模块名称
-                            ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
-                            curl:"user.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
-                        },
-                        {
-                            id: 103,
-                            parentId: 1, //所属模块id,一级菜单的父模块id为0
-                            name: "角色管理", //模块名称
-                            ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
-                            curl:"role.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
-                        },
-                        {
-                            id: 104,
-                            parentId: 1, //所属模块id,一级菜单的父模块id为0
-                            name: "模块管理", //模块名称
-                            ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
-                            curl:"module.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
-                        },
-                        {
-                            id: 105,
-                            parentId: 1, //所属模块id,一级菜单的父模块id为0
-                            name: "系统日志管理", //模块名称
-                            ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
-                            curl:"systemLog.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
-                        }
-
-                    ]
-                },
-                {
-                    id: 2,
-                    parentId: 0, //所属模块id,一级菜单的父模块id为0
-                    name: "题库管理", //模块名称
-                    ctype: 0, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
-                    curl:"store", //请求url路径,一级菜单没有访问路径（用于权限校验）
-                    children: [
-                        {
-                            id: 201,
-                            parentId: 2, //所属模块id,一级菜单的父模块id为0
-                            name: "题目学科管理", //模块名称
-                            ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
-                            curl:"course.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
-                        },
-                        {
-                            id: 202,
-                            parentId: 2, //所属模块id,一级菜单的父模块id为0
-                            name: "题目类型管理", //模块名称
-                            ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
-                            curl:"catalog.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
-                        },
-                        {
-                            id: 203,
-                            parentId: 2, //所属模块id,一级菜单的父模块id为0
-                            name: "企业管理", //模块名称
-                            ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
-                            curl:"company.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
-                        },
-                        {
-                            id: 204,
-                            parentId: 2, //所属模块id,一级菜单的父模块id为0
-                            name: "题目管理", //模块名称
-                            ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
-                            curl:"question.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
-                        },
-                        {
-                            id: 205,
-                            parentId: 2, //所属模块id,一级菜单的父模块id为0
-                            name: "题目审核日志", //模块名称
-                            ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
-                            curl:"examineLog.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
-                        }
-
-                    ]
-                },
-                {
-                    id: 3,
-                    parentId: 0, //所属模块id,一级菜单的父模块id为0
-                    name: "会员管理", //模块名称
-                    ctype: 0, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
-                    curl:"front", //请求url路径,一级菜单没有访问路径（用于权限校验）
-                    children: [
-                        {
-                            id: 301,
-                            parentId: 3, //所属模块id,一级菜单的父模块id为0
-                            name: "会员账号管理", //模块名称
-                            ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
-                            curl:"member.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
-                        },
-                        {
-                            id: 302,
-                            parentId: 3, //所属模块id,一级菜单的父模块id为0
-                            name: "会员答题管理", //模块名称
-                            ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
-                            curl:"examinationPaper.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
-                        },
-                    ]
+            //用户信息
+            user:{},
+            menuList:[]
+            // menuList:[
+            //     {
+            //         id: 1,
+            //         parentId: 0, //所属模块id,一级菜单的父模块id为0
+            //         name: "平台系统管理", //模块名称
+            //         ctype: 0, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+            //         curl:"system", //请求url路径,一级菜单没有访问路径（用于权限校验）
+            //         children: [
+            //             {
+            //                 id: 101,
+            //                 parentId: 1, //所属模块id,一级菜单的父模块id为0
+            //                 name: "部门管理", //模块名称
+            //                 ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+            //                 curl:"dept.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
+            //             },
+            //             {
+            //                 id: 102,
+            //                 parentId: 1, //所属模块id,一级菜单的父模块id为0
+            //                 name: "用户管理", //模块名称
+            //                 ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+            //                 curl:"user.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
+            //             },
+            //             {
+            //                 id: 103,
+            //                 parentId: 1, //所属模块id,一级菜单的父模块id为0
+            //                 name: "角色管理", //模块名称
+            //                 ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+            //                 curl:"role.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
+            //             },
+            //             {
+            //                 id: 104,
+            //                 parentId: 1, //所属模块id,一级菜单的父模块id为0
+            //                 name: "模块管理", //模块名称
+            //                 ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+            //                 curl:"module.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
+            //             },
+            //             {
+            //                 id: 105,
+            //                 parentId: 1, //所属模块id,一级菜单的父模块id为0
+            //                 name: "系统日志管理", //模块名称
+            //                 ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+            //                 curl:"systemLog.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
+            //             }
+            //
+            //         ]
+            //     },
+            //     {
+            //         id: 2,
+            //         parentId: 0, //所属模块id,一级菜单的父模块id为0
+            //         name: "题库管理", //模块名称
+            //         ctype: 0, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+            //         curl:"store", //请求url路径,一级菜单没有访问路径（用于权限校验）
+            //         children: [
+            //             {
+            //                 id: 201,
+            //                 parentId: 2, //所属模块id,一级菜单的父模块id为0
+            //                 name: "题目学科管理", //模块名称
+            //                 ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+            //                 curl:"course.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
+            //             },
+            //             {
+            //                 id: 202,
+            //                 parentId: 2, //所属模块id,一级菜单的父模块id为0
+            //                 name: "题目类型管理", //模块名称
+            //                 ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+            //                 curl:"catalog.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
+            //             },
+            //             {
+            //                 id: 203,
+            //                 parentId: 2, //所属模块id,一级菜单的父模块id为0
+            //                 name: "企业管理", //模块名称
+            //                 ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+            //                 curl:"company.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
+            //             },
+            //             {
+            //                 id: 204,
+            //                 parentId: 2, //所属模块id,一级菜单的父模块id为0
+            //                 name: "题目管理", //模块名称
+            //                 ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+            //                 curl:"question.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
+            //             },
+            //             {
+            //                 id: 205,
+            //                 parentId: 2, //所属模块id,一级菜单的父模块id为0
+            //                 name: "题目审核日志", //模块名称
+            //                 ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+            //                 curl:"examineLog.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
+            //             }
+            //
+            //         ]
+            //     },
+            //     {
+            //         id: 3,
+            //         parentId: 0, //所属模块id,一级菜单的父模块id为0
+            //         name: "会员管理", //模块名称
+            //         ctype: 0, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+            //         curl:"front", //请求url路径,一级菜单没有访问路径（用于权限校验）
+            //         children: [
+            //             {
+            //                 id: 301,
+            //                 parentId: 3, //所属模块id,一级菜单的父模块id为0
+            //                 name: "会员账号管理", //模块名称
+            //                 ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+            //                 curl:"member.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
+            //             },
+            //             {
+            //                 id: 302,
+            //                 parentId: 3, //所属模块id,一级菜单的父模块id为0
+            //                 name: "会员答题管理", //模块名称
+            //                 ctype: 1, //类型（1-系统菜单，2-二级菜单，3-……，4-……）
+            //                 curl:"examinationPaper.html", //请求url路径,一级菜单没有访问路径（用于权限校验）
+            //             },
+            //         ]
+            //     }
+            // ]
+        },
+        created() { //vue对象创建完成的回调函数
+            this.findLoginUser();
+            this.findMenu();
+        },
+        methods: {
+            //查询用户的方法
+            findLoginUser(){
+                //发送异步请求，获取用户信息
+                axios.get("../system/user/findLoginUser").then(resp=>{
+                    if(resp.data.flag){
+                        this.user=resp.data.data;
+                    } else {
+                        this.$message.error(resp.data.message);
+                    }
+                })
+            },
+            //查询该用户具有的菜单信息
+            findMenu(){
+            axios.get("../system/module/findMenu").then(resp=>{
+                if(resp.data.flag){
+                    //动态展示该用户菜单
+                    this.menuList=resp.data.data;
+                }else{
+                    this.$message.error(resp.data.message);
                 }
-            ]
+            })
         }
-    })
+        }
+    });
 </script>
 <script>
+    //将点击的元素所在的列表项（li）添加 active 类，并移除其他兄弟元素中的 active 类，以实现侧边栏的活动状态切换
     function setSidebarActive(th){
         $(th).parent("li").siblings().removeClass("active");
         $(th).parent("li").addClass("active");

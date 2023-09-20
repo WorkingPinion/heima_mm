@@ -2,8 +2,10 @@ package com.itheima.web.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.itheima.constant.MessageConstant;
-import com.itheima.domain.Role;
 import com.itheima.domain.Result;
+import com.itheima.domain.Role;
+import com.itheima.domain.User;
+import com.itheima.service.ModuleService;
 import com.itheima.service.RoleService;
 import com.itheima.utils.BeanFactory;
 import com.itheima.utils.BeanUtil;
@@ -28,6 +30,7 @@ import java.util.List;
 public class RoleServlet extends BaseServlet {
     //统一获取对象
     private RoleService roleService = BeanFactory.getBean("roleService", RoleService.class);
+    private ModuleService moduleService = BeanFactory.getBean("moduleService", ModuleService.class);
 
     /**
      * 处理分页查询的请求
@@ -171,6 +174,15 @@ public class RoleServlet extends BaseServlet {
             String[] moduleIds = BeanUtil.fillBeanFromJson(request, String[].class);
             //2 调用service层方法，查询所有数据
             roleService.updateRoleAndModules(roleId,moduleIds);
+            //更新角色绑定的模块时更新权限保存在session中
+            Object user = request.getSession().getAttribute("user");
+            if(user!=null){
+                User userOne= (User) user;
+                List<String> curls = moduleService.findPermissionByUserId(userOne.getId());
+                request.getSession().setAttribute("curls", curls);
+                System.out.println( request.getSession().getAttribute("curls"));
+            }
+
             //3 响应结果
             return new Result(true, MessageConstant.SETTING_ROLE_AUTHORIZE_SUCCESS);
         } catch (Exception e) {
@@ -179,5 +191,23 @@ public class RoleServlet extends BaseServlet {
         }
     }
 
+    /**
+     * 查询用户绑定的角色id们
+     * @param request
+     * @param response
+     */
+    private Result findRoleIdsByUserId(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            //1 获取请求参数
+            String userId = request.getParameter("userId");
+            //2 调用service层方法查询用户绑定的角色id们
+            String[] checkedRoleIds = roleService.findRoleIdsByUserId(userId);
+            //3 对客户的作出响应
+            return new Result(true, MessageConstant.QUERY_ROLE_SUCCESS,checkedRoleIds);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false, MessageConstant.QUERY_ROLE_FAIL);
+        }
+    }
 }
 
